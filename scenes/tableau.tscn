@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://h3r2odapwqpq"]
+
+[ext_resource type="Script" uid="uid://bvtxa1by1s24x" path="res://scripts/tableau.gd" id="1_meqn6"]
+
+[node name="Tableau" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_meqn6")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(88, 124)
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="CardPile" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

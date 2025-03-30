@@ -1,6 +1,5 @@
 extends Control
 
-const CARD = preload("res://scenes/card.tscn")
 
 signal shuffle_finished
 const STOCK_OFFSET:=Vector2(-112.0,0)
@@ -16,7 +15,7 @@ func add_card(new_card:ClassCard)->void:
 
 func shuffle():
 	var card_index=-1
-	var card_displayed=get_children()
+	var card_displayed=GameSettings.get_waste_card_nodes()
 	while not GameSettings.waste_cards.is_empty():
 		GameSettings.waste_cards.pop()
 		var card_now = card_displayed[card_index]
@@ -29,7 +28,7 @@ func shuffle():
 		
 
 func _push_displayed_cards():
-	var cards_displayed= get_children()
+	var cards_displayed= GameSettings.get_waste_card_nodes()
 		
 	if cards_displayed.size()>=3:
 		# 这里简化逻辑，假设新增的卡牌只有一张，且只需要移动当前的倒数一二张
@@ -38,13 +37,12 @@ func _push_displayed_cards():
 		_move_card(cards_displayed[-1],1,stock_position)
 
 	# 生成最新的卡牌
-	var new_card = CARD.instantiate()
-	add_child(new_card)
-	new_card.set_card(GameSettings.waste_cards.peek())
+	var new_card = GameSettings.add_waste_card_node(GameSettings.waste_cards.peek())
+	
 	# 修改最新卡牌位置		
 	var new_card_index = min(3-1,cards_displayed.size())
 	await _move_card(new_card,new_card_index,stock_position).finished
 
 func _move_card(card,to_index:int,from_pos):
-	var final_pos =global_position+ Vector2(20.0*to_index,0.0)
+	var final_pos =global_position+ Vector2(GameSettings.WAST_PILE_OFFSET_X*to_index,0.0)
 	return card.tween_position(final_pos,GameSettings.STOCK_TO_WASTE_DURATION,from_pos)

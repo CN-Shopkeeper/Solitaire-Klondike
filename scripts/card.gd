@@ -8,6 +8,7 @@ extends Control
 @export var angle_y_max:float =15.0
 @export var max_offset_shadow:float=20.0
 
+
 var card:ClassCard=ClassCard.new("hearts","A")
 
 var tween_move:Tween
@@ -26,7 +27,6 @@ var tween_destroy:Tween
 
 func _ready() -> void:
 	card.connect("card_state_changed", Callable(self, "_on_card_state_changed"))
-	top_level=true
 	angle_x_max=deg_to_rad(angle_x_max)
 	angle_y_max=deg_to_rad(angle_y_max)
 
@@ -88,8 +88,12 @@ func _handle_mouse_click(event: InputEvent)->void:
 	
 	if event.is_pressed():
 		is_following_mouse=true
+		z_index=1
+		# 让其作为场景树最上层元素来实现输入控制
+		get_parent().move_child(self,-1)
 	else:
 		is_following_mouse=false
+		z_index=0
 
 func _stop_rot():
 	if tween_rot and tween_rot.is_running():

@@ -16,6 +16,12 @@ static func shuffle(input_stack: ClassCardStack) -> ClassCardStack:
 
 	return shuffled_stack
 
+func arrange_item()->void:
+	for card in _stack:
+		card.is_on_top=false
+	peek().is_on_top=true
+	peek().is_flipped=false
+
 # 推入元素（push）
 func push(value: ClassCard) -> void:
 	if not is_empty():
@@ -55,6 +61,10 @@ func size() -> int:
 
 func assign(other: ClassCardStack) -> void:
 	_stack = other._get_stack_copy()
+
+# 获取栈的只读副本
+func get_stack_array() -> Array:
+	return _stack.duplicate(true)  # 返回栈的深拷贝，避免外部修改原始栈
 
 # 获取栈的深拷贝（内部使用）
 func _get_stack_copy() -> Array:

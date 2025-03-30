@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://c2m3xgi4ngyao"]
+[gd_scene load_steps=5 format=3 uid="uid://c2m3xgi4ngyao"]
 
 [ext_resource type="Shader" uid="uid://cuqy8y8vmrin7" path="res://shaders/distorted_background.gdshader" id="1_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://cbna67o8yxxrl" path="res://scenes/stock_and_waste.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://h3r2odapwqpq" path="res://scenes/tableau.tscn" id="3_sugp2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tbgi4"]
 shader = ExtResource("1_jyhfs")
@@ -89,49 +90,46 @@ color = Color(0.596078, 0.984314, 0.596078, 0.380392)
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
 layout_mode = 2
 
-[node name="Tableau" type="HBoxContainer" parent="CenterContainer/MarginContainer"]
+[node name="Tableau_group" type="HBoxContainer" parent="CenterContainer/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 2
 theme_override_constants/separation = 24
 
-[node name="ColorRect" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+[node name="Tableau" parent="CenterContainer/MarginContainer/Tableau_group" instance=ExtResource("3_sugp2")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
 
-[node name="ColorRect2" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+[node name="Tableau2" parent="CenterContainer/MarginContainer/Tableau_group" instance=ExtResource("3_sugp2")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+group_index = 1
 
-[node name="ColorRect3" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+[node name="Tableau3" parent="CenterContainer/MarginContainer/Tableau_group" instance=ExtResource("3_sugp2")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+group_index = 2
 
-[node name="ColorRect4" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+[node name="Tableau4" parent="CenterContainer/MarginContainer/Tableau_group" instance=ExtResource("3_sugp2")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+group_index = 3
 
-[node name="ColorRect5" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+[node name="Tableau5" parent="CenterContainer/MarginContainer/Tableau_group" instance=ExtResource("3_sugp2")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+group_index = 4
 
-[node name="ColorRect6" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+[node name="Tableau6" parent="CenterContainer/MarginContainer/Tableau_group" instance=ExtResource("3_sugp2")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+group_index = 5
 
-[node name="ColorRect7" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+[node name="Tableau7" parent="CenterContainer/MarginContainer/Tableau_group" instance=ExtResource("3_sugp2")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+group_index = 6
+
+[node name="Cards" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
