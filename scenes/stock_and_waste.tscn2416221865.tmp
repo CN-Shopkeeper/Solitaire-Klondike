@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbna67o8yxxrl"]
+
+[ext_resource type="Script" uid="uid://vameuac63bnu" path="res://scenes/stock_and_waste.gd" id="1_4uw5a"]
+[ext_resource type="PackedScene" uid="uid://p2nlpgbmqmn5" path="res://scenes/stock.tscn" id="1_ghj1o"]
+[ext_resource type="PackedScene" uid="uid://feqhhvsv8bk3" path="res://scenes/Waste.tscn" id="2_4uw5a"]
+
+[node name="StockAndWaste" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+script = ExtResource("1_4uw5a")
+
+[node name="Stock" parent="." instance=ExtResource("1_ghj1o")]
+layout_mode = 2
+
+[node name="Waste" parent="." instance=ExtResource("2_4uw5a")]
+layout_mode = 2
+
+[connection signal="stock_card_popped" from="Stock" to="." method="_on_stock_stock_card_popped"]
+[connection signal="stock_to_shuffle" from="Stock" to="." method="_on_stock_stock_to_shuffle"]

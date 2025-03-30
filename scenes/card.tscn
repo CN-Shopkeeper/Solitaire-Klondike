@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3 uid="uid://co32kwre84jkg"]
+
+[ext_resource type="Shader" uid="uid://cfgg82udgfufi" path="res://shaders/fake_3d.gdshader" id="1_6u4wf"]
+[ext_resource type="Script" uid="uid://6qu3vkd4lc4t" path="res://scripts/card.gd" id="1_ktuci"]
+[ext_resource type="Texture2D" uid="uid://bhxbvy5ng5ixg" path="res://asserts/cards/hearts_A.png" id="2_ktuci"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d54s8"]
+resource_local_to_scene = true
+shader = ExtResource("1_6u4wf")
+shader_parameter/fov = 90.0
+shader_parameter/cull_back = true
+shader_parameter/y_rot = 0.0
+shader_parameter/x_rot = 0.0
+shader_parameter/inset = 0.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rh58l"]
+size = Vector2(44, 62)
+
+[node name="Card" type="Control"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 88.0
+offset_bottom = 124.0
+pivot_offset = Vector2(44, 62)
+size_flags_horizontal = 0
+script = ExtResource("1_ktuci")
+
+[node name="Shadow" type="TextureRect" parent="."]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(1, 1, 1, 0.631373)
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
+offset_top = 24.0
+offset_right = 88.0
+offset_bottom = 148.0
+texture = ExtResource("2_ktuci")
+
+[node name="CardTexture" type="TextureRect" parent="."]
+z_index = 1
+material = SubResource("ShaderMaterial_d54s8")
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
+offset_right = 88.0
+offset_bottom = 124.0
+texture = ExtResource("2_ktuci")
+
+[node name="Area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area"]
+position = Vector2(44, 62)
+shape = SubResource("RectangleShape2D_rh58l")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

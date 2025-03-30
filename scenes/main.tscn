@@ -1,0 +1,137 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2m3xgi4ngyao"]
+
+[ext_resource type="Shader" uid="uid://cuqy8y8vmrin7" path="res://shaders/distorted_background.gdshader" id="1_jyhfs"]
+[ext_resource type="PackedScene" uid="uid://cbna67o8yxxrl" path="res://scenes/stock_and_waste.tscn" id="2_0wfyh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tbgi4"]
+shader = ExtResource("1_jyhfs")
+shader_parameter/colour1 = Color(0, 0.392157, 0, 1)
+shader_parameter/colour2 = Color(0, 0.501961, 0, 1)
+shader_parameter/colour3 = Color(0.196078, 0.803922, 0.196078, 1)
+shader_parameter/colour4 = Color(0.235294, 0.701961, 0.443137, 1)
+shader_parameter/contrast = 5
+shader_parameter/gradual = 2.0
+shader_parameter/width1 = 0.04
+shader_parameter/width2 = 0.1
+shader_parameter/scale1 = 10.0
+shader_parameter/scale2 = 1.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/intensity = 0.2
+shader_parameter/spin_speed = 0.2
+shader_parameter/spin_amount = 1.5
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_tbgi4")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CardTable" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(760, 500)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/CardTable"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="StockAndWaste" parent="CenterContainer/CardTable/HBoxContainer" instance=ExtResource("2_0wfyh")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Foundation" type="HBoxContainer" parent="CenterContainer/CardTable/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/separation = 24
+
+[node name="ColorRect" type="ColorRect" parent="CenterContainer/CardTable/HBoxContainer/Foundation"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect2" type="ColorRect" parent="CenterContainer/CardTable/HBoxContainer/Foundation"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect3" type="ColorRect" parent="CenterContainer/CardTable/HBoxContainer/Foundation"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect4" type="ColorRect" parent="CenterContainer/CardTable/HBoxContainer/Foundation"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Tableau" type="HBoxContainer" parent="CenterContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="ColorRect" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect2" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect3" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect4" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect5" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect6" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="ColorRect7" type="ColorRect" parent="CenterContainer/MarginContainer/Tableau"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)

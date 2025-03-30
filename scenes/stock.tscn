@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://p2nlpgbmqmn5"]
+
+[ext_resource type="Script" uid="uid://b3pn1h6egekwl" path="res://scripts/stock.gd" id="1_y5bj3"]
+[ext_resource type="Texture2D" uid="uid://cbtvx77xne8n5" path="res://asserts/cards/card_back_red.png" id="2_p7rtt"]
+
+[node name="Stock" type="Control"]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_y5bj3")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+self_modulate = Color(1, 1, 1, 0.196078)
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture_normal = ExtResource("2_p7rtt")
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]
