@@ -1,6 +1,8 @@
 class_name ClassCardStack
 extends Node
 
+signal item_changed
+
 var _stack: Array = []  # 使用 Array 来模拟栈
 
 # 静态方法：打乱 ClassCardStack 的元素并返回一个新的 ClassCardStack
@@ -28,12 +30,16 @@ func push(value: ClassCard) -> void:
 		peek().is_on_top=false
 	_stack.append(value)
 	peek().is_on_top=true
+	print("item changed")
+	emit_signal("item_changed")
 
 # 弹出元素（pop）
 func pop() -> ClassCard:
 	if _stack.size() > 0:
 		var top_card = _stack.pop_back()
 		top_card.is_flipped=false
+		
+		emit_signal("item_changed")
 		if not is_empty():
 			peek().is_on_top=true
 		return top_card   # 返回并移除栈顶元素

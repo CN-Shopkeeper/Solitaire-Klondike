@@ -2,6 +2,7 @@ extends Control
 
 @onready var card_texture: TextureRect = $CardTexture
 @onready var shadow: TextureRect = $Shadow
+@onready var area: Area2D = $Area
 
 @export var card_face:Texture2D=preload("res://asserts/cards/hearts_A.png")
 @export var angle_x_max:float =15.0
@@ -11,6 +12,7 @@ extends Control
 
 var card:ClassCard=ClassCard.new("hearts","A")
 
+var legal_position:Vector2
 var tween_move:Tween
 
 var is_activate:bool:
@@ -26,7 +28,7 @@ var tween_hover:Tween
 var tween_destroy:Tween
 
 func _ready() -> void:
-	card.connect("card_state_changed", Callable(self, "_on_card_state_changed"))
+	area.add_to_group("card_area")
 	angle_x_max=deg_to_rad(angle_x_max)
 	angle_y_max=deg_to_rad(angle_y_max)
 
@@ -37,14 +39,20 @@ func _process(delta: float) -> void:
 func set_card(_card:ClassCard)->void:
 	card=_card
 	card_face=load(card.get_texture_path())
+	card.connect("card_state_changed", Callable(self, "_on_card_state_changed"))
 	_update_texture()
 
 func tween_position(to_pos:Vector2,duration:float,from_pos:Vector2=Vector2.ZERO,delay=0.0):
+	_stop_hover()
+	_stop_rot()
 	if tween_move and tween_move.is_running():
 		tween_move.kill()
 	tween_move= create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_move.tween_property(self,"position",to_pos,duration).from(from_pos).set_delay(delay)
 	return tween_move
+
+func tween_to_legal_position():
+	tween_position(legal_position,0.3,position)
 
 # 销毁
 func destroy()->void:
@@ -58,11 +66,25 @@ func destroy()->void:
 	await tween_destroy.finished
 	queue_free()
 
+func _check_move_legal()->bool:
+	var overlapping_areas = area.get_overlapping_areas()
+	if overlapping_areas.size()==0:
+		return false
+	for oa in overlapping_areas:
+		if oa.is_in_group("card_area"):
+			var oa_card=oa.get_parent()
+			var is_legal  = GameSettings.check_card_move_legal(card,oa_card.card)
+			if is_legal:
+				GameSettings.move_card_to_tableau(self,oa_card)
+			return is_legal
+	return false
+
 func _on_card_state_changed():
 	var new_value = is_activate
 	if new_value != _previous_is_activate:
 		_previous_is_activate = new_value
 		_update_texture()
+		area.monitorable=is_activate
 
 func _update_texture():	
 	if card.is_flipped:
@@ -94,6 +116,8 @@ func _handle_mouse_click(event: InputEvent)->void:
 	else:
 		is_following_mouse=false
 		z_index=0
+		if not _check_move_legal():
+			tween_to_legal_position()
 
 func _stop_rot():
 	if tween_rot and tween_rot.is_running():

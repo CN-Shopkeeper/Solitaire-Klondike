@@ -6,6 +6,7 @@ signal card_state_changed
 var suit:String
 var point:String
 
+
 var is_flipped: bool = true:
 	set(value):
 		if is_flipped != value:

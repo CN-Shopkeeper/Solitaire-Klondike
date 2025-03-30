@@ -44,6 +44,7 @@ offset_bottom = 124.0
 texture = ExtResource("2_ktuci")
 
 [node name="Area" type="Area2D" parent="."]
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area"]
 position = Vector2(44, 62)

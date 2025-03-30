@@ -17,19 +17,24 @@ var pile_offset_y:float:
 			return 20-cards.size()+10
 
 func _ready() -> void:
+	$Area2D.add_to_group("tableau_area")
 	await get_tree().create_timer(1).timeout
 	var stock_cards:=ClassCardStack.new()
 	var suits=["hearts","clubs","diamonds","spades"]
 	var index=0
 	var points=['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 	points.reverse()
+	var lpi=0
 	for point in points:
-		
 		stock_cards.push(ClassCard.new(suits[index],point))
+		if lpi>=group_index*2:
+			break
 		index+=1
+		lpi+=1
 		index%=4
-	stock_cards.arrange_item()
 	reset(stock_cards)
+	
+	cards.connect("item_changed",Callable(self,"_rearrange"))
 
 func reset(new_stock_cards:ClassCardStack)->void:
 	_clear_all_cards()
@@ -38,9 +43,23 @@ func reset(new_stock_cards:ClassCardStack)->void:
 	for card in cards.get_stack_array():
 		# 生成最新的卡牌
 		var node = GameSettings.add_tableau_card_node(group_index,card)
-		node.position=global_position+Vector2(0.0,index*pile_offset_y)
+		var position:=global_position+Vector2(0.0,index*pile_offset_y)
+		node.position=position
+		node.legal_position=position
 		index+=1
+	cards.arrange_item()
 
+func _rearrange():
+	var card_nodes = GameSettings.get_tableau_card_nodes(group_index)
+	
+	cards.arrange_item()
+	var index=0
+	for node in card_nodes:
+		var position:=global_position+Vector2(0.0,index*pile_offset_y)
+		node.legal_position=position
+		node.tween_to_legal_position()
+		index+=1
+	
 
 func _clear_all_cards() -> void:
 	for child in card_pile.get_children():

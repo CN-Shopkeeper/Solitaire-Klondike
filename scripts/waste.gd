@@ -45,4 +45,5 @@ func _push_displayed_cards():
 
 func _move_card(card,to_index:int,from_pos):
 	var final_pos =global_position+ Vector2(GameSettings.WAST_PILE_OFFSET_X*to_index,0.0)
+	card.legal_position= final_pos
 	return card.tween_position(final_pos,GameSettings.STOCK_TO_WASTE_DURATION,from_pos)
