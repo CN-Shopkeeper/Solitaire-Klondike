@@ -6,19 +6,14 @@ extends Control
 
 var cards:ClassCardStack:
 	get:
-		return GameSettings.get_foundation_stack(suit)
+		return GameData.get_foundation_stack(suit)
 
 
-const suit_symbols = {
-	"diamonds":"♦",
-	"clubs":"♣",
-	"hearts":"♥",
-	"spades":"♠"
-}
+
 
 func _ready() -> void:
 	$Area2D.add_to_group("foundation_area")
-	label.text=suit_symbols.get(suit)
+	label.text=Poker.get_suit_symbol(suit)
 	label.add_theme_color_override("font_color", suit_color)
 	cards.connect("item_changed",Callable(self,"_rearrange"))
 

@@ -4,24 +4,26 @@ extends Control
 signal shuffle_finished
 const STOCK_OFFSET:=Vector2(-112.0,0)
 
+var cards = GameData.get_waste_stack()
+
 var stock_position:Vector2:
 	get:
 		return STOCK_OFFSET+global_position
 
 func _ready() -> void:
-	GameSettings.waste_cards.connect("item_changed",Callable(self,"_rearrange"))
+	cards.connect("item_changed",Callable(self,"_rearrange"))
 
 func add_card(new_card:ClassCard)->void:
 	# 生成最新的卡牌
 	var new_card_node = GameSettings.add_waste_card_node(new_card)
 	new_card_node.position=stock_position
-	GameSettings.waste_cards.push(new_card)
+	cards.push(new_card)
 
 func shuffle():
 	var card_index=-1
 	var card_displayed=GameSettings.get_waste_card_nodes()
-	while not GameSettings.waste_cards.is_empty():
-		GameSettings.waste_cards.pop()
+	while not cards.is_empty():
+		cards.pop()
 		var card_now = card_displayed[card_index]
 		await card_now.tween_position(stock_position,GameSettings.WASTE_TO_STOCK_DURATION,stock_position,GameSettings.WASTE_TO_STOCK_DELAY).finished
 		# 在动画结束时释放

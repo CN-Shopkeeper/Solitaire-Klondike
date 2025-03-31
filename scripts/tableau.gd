@@ -6,7 +6,7 @@ const CARD = preload("res://scenes/card.tscn")
 
 var cards:ClassCardStack:
 	get:
-		return GameSettings.tableau_cards[group_index]
+		return GameData.get_tableau_stack(group_index)
 
 
 var pile_offset_y:float:
@@ -18,31 +18,18 @@ var pile_offset_y:float:
 
 func _ready() -> void:
 	$Area2D.add_to_group("tableau_area")
-	await get_tree().create_timer(1).timeout
-	var stock_cards:=ClassCardStack.new()
-	var suits=["hearts","clubs","diamonds","spades"]
-	var index=0
-	var points=['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-	points.reverse()
-	var lpi=0
-	for point in points:
-		stock_cards.push(ClassCard.new(suits[0],point))
-		if lpi>=group_index*2:
-			break
-		index+=1
-		lpi+=1
-		index%=4
-	reset(stock_cards)
 	
 	cards.connect("item_changed",Callable(self,"_rearrange"))
 
 func reset(new_stock_cards:ClassCardStack)->void:
+	print(global_position)
 	_clear_all_cards()
 	cards.assign(new_stock_cards)
 	var index=0
 	for card in cards.get_stack_array():
 		# 生成最新的卡牌
 		var node = GameSettings.add_tableau_card_node(group_index,card)
+		
 		var position:=global_position+Vector2(0.0,index*pile_offset_y)
 		node.position=position
 		node.legal_position=position

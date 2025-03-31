@@ -79,15 +79,14 @@ func _check_move_legal()->bool:
 		# tableau中的卡牌
 		if oa.is_in_group("card_area"):
 			var oa_card=oa.get_parent()
-			var is_legal  = GameSettings.check_card_move_legal(card,oa_card.card)
+			var is_legal  = GameRules.check_card_move_tableau_legal(card,oa_card.card)
 			if is_legal:
 				GameSettings.move_cards_to_tableau(self,oa_card)
 			return is_legal
 		# foundation检测区域
 		if oa.is_in_group("foundation_area"):
 			var oa_foundation=oa.get_parent()
-			var is_legal = GameSettings.check_card_move_foundation_legal(card,oa_foundation.suit)
-			print("foundation_area",is_legal)
+			var is_legal = GameRules.check_card_move_foundation_legal(card,oa_foundation.suit)
 			if is_legal:
 				GameSettings.move_card_to_foundation(self,oa_foundation.suit)
 			return is_legal
@@ -150,7 +149,7 @@ func _handle_mouse_move(event:InputEvent)->void:
 	get_tree().call_group("move_group_tmp","_move",global_position,following_position,event.relative)
 
 func _update_z_index(root_card_point:String,root_z_index:int):
-	var point_offset = GameSettings.POINTS.find(root_card_point)-GameSettings.POINTS.find(card.point)
+	var point_offset =Poker.get_point_num_value(root_card_point)-Poker.get_point_num_value(card.point)
 	z_index=root_z_index+point_offset
 	# 让其作为场景树最上层元素来实现输入控制
 	get_parent().move_child(self,-1)

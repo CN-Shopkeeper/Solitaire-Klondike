@@ -63,6 +63,7 @@ func peek() -> ClassCard:
 # 清空栈
 func clear() -> void:
 	_stack.clear()
+	emit_signal("item_changed")
 
 # 查找第一个匹配的card，并返回从该元素到栈底的数组拷贝
 func find_first_and_get_sublist(card: ClassCard) -> Array:
@@ -97,7 +98,7 @@ func _arrange_item()->void:
 	var index:int = _stack.size()-1
 	# 我们假设这里所有的index都是合法的
 	var ordering:=true
-	var last_point_index = GameSettings.POINTS.find(peek().point)
+	var last_point_value =Poker.get_point_num_value(peek().point)
 	while index>=0:
 		var card = _stack[index]
 		if index == _stack.size()-1:
@@ -106,14 +107,14 @@ func _arrange_item()->void:
 		else:
 			card.is_on_top=false
 			if ordering:				
-				var now_point_index = GameSettings.POINTS.find(card.point)
+				var now_point_value =Poker.get_point_num_value(card.point)
 				# 这里只判断了点数，没有判断花色
-				if now_point_index==last_point_index+1:
+				if now_point_value==last_point_value+1:
 					card.is_in_order=true
 				else:
 					card.is_in_order=false
 					ordering=false
-				last_point_index=now_point_index
+				last_point_value=now_point_value
 			else:
 				card.is_in_order=false
 		index-=1

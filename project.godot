@@ -18,3 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameSettings="*res://scripts/autoload_game_settings.gd"
+GameRules="*res://scripts/autoload_game_rules.gd"
+Poker="*res://scripts/autoload_poker.gd"
+GameData="*res://scripts/autoload_game_data.gd"

@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://c2m3xgi4ngyao"]
+[gd_scene load_steps=7 format=3 uid="uid://c2m3xgi4ngyao"]
 
 [ext_resource type="Shader" uid="uid://cuqy8y8vmrin7" path="res://shaders/distorted_background.gdshader" id="1_jyhfs"]
+[ext_resource type="Script" uid="uid://dcwye4nb25wld" path="res://scenes/main.gd" id="1_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://cbna67o8yxxrl" path="res://scenes/stock_and_waste.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://blxdvbdlwsux" path="res://scenes/foundation.tscn" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://h3r2odapwqpq" path="res://scenes/tableau.tscn" id="3_sugp2"]
@@ -29,6 +30,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_tbgi4")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_tbgi4")
