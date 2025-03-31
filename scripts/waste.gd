@@ -8,10 +8,14 @@ var stock_position:Vector2:
 	get:
 		return STOCK_OFFSET+global_position
 
+func _ready() -> void:
+	GameSettings.waste_cards.connect("item_changed",Callable(self,"_rearrange"))
 
 func add_card(new_card:ClassCard)->void:
+	# 生成最新的卡牌
+	var new_card_node = GameSettings.add_waste_card_node(new_card)
+	new_card_node.position=stock_position
 	GameSettings.waste_cards.push(new_card)
-	_push_displayed_cards()
 
 func shuffle():
 	var card_index=-1
@@ -26,23 +30,26 @@ func shuffle():
 	
 	emit_signal("shuffle_finished")
 		
-
-func _push_displayed_cards():
-	var cards_displayed= GameSettings.get_waste_card_nodes()
-		
-	if cards_displayed.size()>=3:
-		# 这里简化逻辑，假设新增的卡牌只有一张，且只需要移动当前的倒数一二张
-		# 移动后面两张卡牌
-		_move_card(cards_displayed[-2],0,stock_position)
-		_move_card(cards_displayed[-1],1,stock_position)
-
-	# 生成最新的卡牌
-	var new_card = GameSettings.add_waste_card_node(GameSettings.waste_cards.peek())
 	
-	# 修改最新卡牌位置		
-	var new_card_index = min(3-1,cards_displayed.size())
-	await _move_card(new_card,new_card_index,stock_position).finished
-
+func _rearrange():
+	var cards_displayed= GameSettings.get_waste_card_nodes()
+	#for i in range(cards_displayed.size()):
+		#cards_displayed[i].z_index = i
+	
+	if cards_displayed.size()>=3:
+		# 这里简化逻辑，只需要移动当前的倒数一二三张
+		# 移动后面三张卡牌
+		_move_card(cards_displayed[-3],0,cards_displayed[-3].position)
+		_move_card(cards_displayed[-2],1,cards_displayed[-2].position)
+		_move_card(cards_displayed[-1],2,cards_displayed[-1].position)
+	elif cards_displayed.size()==2:
+		_move_card(cards_displayed[-2],0,cards_displayed[-2].position)
+		_move_card(cards_displayed[-1],1,cards_displayed[-1].position)
+	elif cards_displayed.size()==1:
+		_move_card(cards_displayed[0],0,cards_displayed[0].position)
+	
+	
+	
 func _move_card(card,to_index:int,from_pos):
 	var final_pos =global_position+ Vector2(GameSettings.WAST_PILE_OFFSET_X*to_index,0.0)
 	card.legal_position= final_pos

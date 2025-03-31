@@ -4,18 +4,20 @@ extends HBoxContainer
 
 func _ready() -> void:
 	var stock_cards:=ClassCardStack.new()
+	var cards:Array[ClassCard]=[]
 	var suits=["hearts","clubs","diamonds","spades"]
 	var index=0
 	var points=['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 	points.reverse()
 	for point in points:
-		
-		stock_cards.push(ClassCard.new(suits[index],point))
+		cards.append(ClassCard.new(suits[index],point))
 		index+=1
 		index%=4
+	stock_cards.push_n(cards)
 	stock.reset(stock_cards)
 
 func _on_stock_stock_card_popped(card: ClassCard) -> void:
+	card.is_flipped=false
 	waste.add_card(card)
 
 

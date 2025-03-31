@@ -47,12 +47,11 @@ func reset(new_stock_cards:ClassCardStack)->void:
 		node.position=position
 		node.legal_position=position
 		index+=1
-	cards.arrange_item()
+	cards.peek().is_flipped=false
 
 func _rearrange():
 	var card_nodes = GameSettings.get_tableau_card_nodes(group_index)
 	
-	cards.arrange_item()
 	var index=0
 	for node in card_nodes:
 		var position:=global_position+Vector2(0.0,index*pile_offset_y)
@@ -60,6 +59,9 @@ func _rearrange():
 		node.tween_to_legal_position()
 		index+=1
 	
+	# 尝试将最上面一张翻开
+	if card_nodes.size()>0:
+		card_nodes[-1].card.is_flipped=false
 
 func _clear_all_cards() -> void:
 	for child in card_pile.get_children():

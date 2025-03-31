@@ -17,11 +17,14 @@ var tween_move:Tween
 
 var is_activate:bool:
 	get:
-		return card.is_on_top and not card.is_flipped and (not tween_move or not tween_move.is_running())
+		return ((card.is_on_top or card.is_in_order)
+			and not card.is_flipped 
+			and (not tween_move or not tween_move.is_running())
+		)
 
-var _previous_is_activate:bool
 			
 var is_following_mouse:bool=false
+var following_position:Vector2
 
 var tween_rot:Tween
 var tween_hover:Tween
@@ -34,16 +37,16 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_handle_shadow(delta)
-	_follow_mouse(delta)
 
 func set_card(_card:ClassCard)->void:
 	card=_card
+	card.owning_node=weakref(self)
 	card_face=load(card.get_texture_path())
 	card.connect("card_state_changed", Callable(self, "_on_card_state_changed"))
 	_update_texture()
 
 func tween_position(to_pos:Vector2,duration:float,from_pos:Vector2=Vector2.ZERO,delay=0.0):
-	_stop_hover()
+	stop_hover()
 	_stop_rot()
 	if tween_move and tween_move.is_running():
 		tween_move.kill()
@@ -73,18 +76,18 @@ func _check_move_legal()->bool:
 	for oa in overlapping_areas:
 		if oa.is_in_group("card_area"):
 			var oa_card=oa.get_parent()
+			print(oa_card.card.suit,oa_card.card.point)
 			var is_legal  = GameSettings.check_card_move_legal(card,oa_card.card)
 			if is_legal:
-				GameSettings.move_card_to_tableau(self,oa_card)
+				GameSettings.move_cards_to_tableau(self,oa_card)
 			return is_legal
 	return false
 
+# 卡牌状况发生了变化
 func _on_card_state_changed():
-	var new_value = is_activate
-	if new_value != _previous_is_activate:
-		_previous_is_activate = new_value
-		_update_texture()
-		area.monitorable=is_activate
+	_update_texture()
+	area.monitorable=is_activate and card.is_on_top
+		
 
 func _update_texture():	
 	if card.is_flipped:
@@ -98,26 +101,75 @@ func _handle_shadow(delta:float)->void:
 	
 	shadow.position.x = lerp(0.0,max_offset_shadow*sign(distance),abs(distance/center.x))
 	
-func _follow_mouse(delta:float)->void:
-	if not is_activate: return
-	if not is_following_mouse: return
-	global_position = get_global_mouse_position()-size/2
 
 func _handle_mouse_click(event: InputEvent)->void:
 	if not is_activate: return
-	if not event is InputEventMouseButton:return
 	if event.button_index!=MOUSE_BUTTON_LEFT:return
 	
 	if event.is_pressed():
 		is_following_mouse=true
-		z_index=1
-		# 让其作为场景树最上层元素来实现输入控制
-		get_parent().move_child(self,-1)
+
+		following_position=get_local_mouse_position()
+		
+		# 修改其order下的所有卡牌
+		# 创建一个临时的移动group
+		GameSettings.create_move_group_tmp(self)
+		get_tree().call_group("move_group_tmp","_update_z_index",card.point,1)
+		# 关闭被碰撞检测
+		get_tree().call_group("move_group_tmp","_disable_monitorable")
+		
 	else:
 		is_following_mouse=false
-		z_index=0
+		
+		# (有条件地)开启被碰撞检测
+		get_tree().call_group("move_group_tmp","_enable_monitorable")
+
+		get_tree().call_group("move_group_tmp","_reset_z_index")
+
 		if not _check_move_legal():
-			tween_to_legal_position()
+			get_tree().call_group("move_group_tmp","tween_to_legal_position")
+		GameSettings.delete_move_group_tmp()
+
+func _handle_mouse_move(event:InputEvent)->void:
+	if not is_activate:return
+	if not is_following_mouse:return
+	get_tree().call_group("move_group_tmp","_move",global_position,following_position,event.relative)
+
+func _update_z_index(root_card_point:String,root_z_index:int):
+	var point_offset = GameSettings.POINTS.find(root_card_point)-GameSettings.POINTS.find(card.point)
+	z_index=root_z_index+point_offset
+	# 让其作为场景树最上层元素来实现输入控制
+	get_parent().move_child(self,-1)
+	
+func _reset_z_index():
+	z_index=0
+
+func _disable_monitorable():
+	area.monitorable=false
+	
+func _enable_monitorable():
+	area.monitorable=is_activate and card.is_on_top
+
+func _move(root_position:Vector2,relative_position:Vector2,mouse_velocity:Vector2):
+	var pos_offset = global_position-root_position
+	global_position = get_global_mouse_position()-relative_position +pos_offset
+	
+	# 根据鼠标移动速度添加旋转
+	var lerp_val_x:float = remap(-mouse_velocity.y,-size.x/5,size.x/5,0,1)
+	var lerp_val_y:float = remap(mouse_velocity.x,-size.y/5,size.y/5,0,1)
+
+	var rot_x :float= rad_to_deg(lerp_angle(-angle_x_max,angle_x_max,lerp_val_x))
+	var rot_y :float= rad_to_deg(lerp_angle(-angle_y_max,angle_y_max,lerp_val_y)) 
+
+	card_texture.material.set_shader_parameter("x_rot",rot_x)
+	card_texture.material.set_shader_parameter("y_rot",rot_y)
+	pass
+
+func hover():
+	if tween_hover and tween_hover.is_running():
+		tween_hover.kill()
+	tween_hover=create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	tween_hover.tween_property(self,"scale",Vector2(1.1,1.1),0.5)
 
 func _stop_rot():
 	if tween_rot and tween_rot.is_running():
@@ -126,7 +178,7 @@ func _stop_rot():
 	tween_rot.tween_property(card_texture.material,"shader_parameter/x_rot",0.0,0.5)
 	tween_rot.tween_property(card_texture.material,"shader_parameter/y_rot",0.0,0.5)
 	
-func _stop_hover():
+func stop_hover():
 	if tween_hover and tween_hover.is_running():
 		tween_hover.kill()
 	tween_hover=create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
@@ -134,29 +186,25 @@ func _stop_hover():
 
 func _on_gui_input(event: InputEvent) -> void:
 	if not is_activate: return
-	_handle_mouse_click(event)
-	if is_following_mouse: return
-	if not event is InputEventMouseMotion: return
-	var mouse_pos :Vector2 =get_local_mouse_position()
-	var lerp_val_x:float = remap(mouse_pos.x,0.0,size.x,0,1)
-	var lerp_val_y:float = remap(mouse_pos.y,0.0,size.y,0,1)
-	
-	var rot_x :float= rad_to_deg(lerp_angle(-angle_x_max,angle_x_max,lerp_val_x))
-	var rot_y :float= rad_to_deg(lerp_angle(-angle_y_max,angle_y_max,lerp_val_y)) 
-	
-	card_texture.material.set_shader_parameter("x_rot",rot_x)
-	card_texture.material.set_shader_parameter("y_rot",rot_y)
+	if event is InputEventMouseButton:		
+		_handle_mouse_click(event)
+	elif event is InputEventMouseMotion:
+		_handle_mouse_move(event)
 	
 
 func _on_mouse_exited() -> void:
 	if not is_activate: return
 	_stop_rot()
-	_stop_hover()
+	# 其顺序下的所有卡牌都hover
+	var nodes= GameSettings.find_ordering_card_nodes(self)
+	for node in nodes:
+		node.stop_hover()
 	
 
 func _on_mouse_entered() -> void:
 	if not is_activate: return
-	if tween_hover and tween_hover.is_running():
-		tween_hover.kill()
-	tween_hover=create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-	tween_hover.tween_property(self,"scale",Vector2(1.2,1.2),0.5)
+	# 其顺序下的所有卡牌都hover
+	var nodes= GameSettings.find_ordering_card_nodes(self)
+	for node in nodes:
+		node.hover()
+	

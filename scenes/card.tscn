@@ -30,6 +30,7 @@ script = ExtResource("1_ktuci")
 modulate = Color(0, 0, 0, 1)
 self_modulate = Color(1, 1, 1, 0.631373)
 custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
 offset_top = 24.0
 offset_right = 88.0
 offset_bottom = 148.0
@@ -39,11 +40,13 @@ texture = ExtResource("2_ktuci")
 z_index = 1
 material = SubResource("ShaderMaterial_d54s8")
 custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
 offset_right = 88.0
 offset_bottom = 124.0
 texture = ExtResource("2_ktuci")
 
 [node name="Area" type="Area2D" parent="."]
+z_index = 1
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area"]

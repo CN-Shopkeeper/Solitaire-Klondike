@@ -3,16 +3,25 @@ extends Node
 
 signal card_state_changed
 
+var owning_node:WeakRef
+
 var suit:String
 var point:String
 
+# 是否处于一个顺序的牌组中
+var is_in_order:bool = false:
+	set(value):
+		#if is_in_order != value:
+		is_in_order = value
+		emit_signal("card_state_changed")
 
+# 是否被翻面
 var is_flipped: bool = true:
 	set(value):
 		if is_flipped != value:
 			is_flipped = value
 			emit_signal("card_state_changed")
-		
+	
 var is_on_top:bool=false:
 	set(value):
 		if is_on_top != value:
