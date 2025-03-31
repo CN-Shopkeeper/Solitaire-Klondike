@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://c2m3xgi4ngyao"]
+[gd_scene load_steps=6 format=3 uid="uid://c2m3xgi4ngyao"]
 
 [ext_resource type="Shader" uid="uid://cuqy8y8vmrin7" path="res://shaders/distorted_background.gdshader" id="1_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://cbna67o8yxxrl" path="res://scenes/stock_and_waste.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://blxdvbdlwsux" path="res://scenes/foundation.tscn" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://h3r2odapwqpq" path="res://scenes/tableau.tscn" id="3_sugp2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tbgi4"]
@@ -63,29 +64,29 @@ layout_mode = 2
 size_flags_horizontal = 10
 theme_override_constants/separation = 24
 
-[node name="ColorRect" type="ColorRect" parent="CenterContainer/CardTable/HBoxContainer/Foundation"]
+[node name="FoundationDiamonds" parent="CenterContainer/CardTable/HBoxContainer/Foundation" instance=ExtResource("3_jyhfs")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+suit = "diamonds"
+suit_color = Color(1, 0, 0, 0.392157)
 
-[node name="ColorRect2" type="ColorRect" parent="CenterContainer/CardTable/HBoxContainer/Foundation"]
+[node name="FoundationClubs" parent="CenterContainer/CardTable/HBoxContainer/Foundation" instance=ExtResource("3_jyhfs")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+suit = "clubs"
+suit_color = Color(0, 0, 0, 0.392157)
 
-[node name="ColorRect3" type="ColorRect" parent="CenterContainer/CardTable/HBoxContainer/Foundation"]
+[node name="FoundationHearts" parent="CenterContainer/CardTable/HBoxContainer/Foundation" instance=ExtResource("3_jyhfs")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+suit = "hearts"
+suit_color = Color(1, 0, 0, 0.392157)
 
-[node name="ColorRect4" type="ColorRect" parent="CenterContainer/CardTable/HBoxContainer/Foundation"]
+[node name="FoundationSpades" parent="CenterContainer/CardTable/HBoxContainer/Foundation" instance=ExtResource("3_jyhfs")]
 custom_minimum_size = Vector2(88, 124)
 layout_mode = 2
-mouse_filter = 1
-color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+suit = "spades"
+suit_color = Color(0, 0, 0, 0.392157)
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
 layout_mode = 2

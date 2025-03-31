@@ -20,6 +20,7 @@ var is_activate:bool:
 		return ((card.is_on_top or card.is_in_order)
 			and not card.is_flipped 
 			and (not tween_move or not tween_move.is_running())
+			and not card.is_completed
 		)
 
 			
@@ -45,6 +46,7 @@ func set_card(_card:ClassCard)->void:
 	card.connect("card_state_changed", Callable(self, "_on_card_state_changed"))
 	_update_texture()
 
+# todo 添加async版本
 func tween_position(to_pos:Vector2,duration:float,from_pos:Vector2=Vector2.ZERO,delay=0.0):
 	stop_hover()
 	_stop_rot()
@@ -74,12 +76,20 @@ func _check_move_legal()->bool:
 	if overlapping_areas.size()==0:
 		return false
 	for oa in overlapping_areas:
+		# tableau中的卡牌
 		if oa.is_in_group("card_area"):
 			var oa_card=oa.get_parent()
-			print(oa_card.card.suit,oa_card.card.point)
 			var is_legal  = GameSettings.check_card_move_legal(card,oa_card.card)
 			if is_legal:
 				GameSettings.move_cards_to_tableau(self,oa_card)
+			return is_legal
+		# foundation检测区域
+		if oa.is_in_group("foundation_area"):
+			var oa_foundation=oa.get_parent()
+			var is_legal = GameSettings.check_card_move_foundation_legal(card,oa_foundation.suit)
+			print("foundation_area",is_legal)
+			if is_legal:
+				GameSettings.move_card_to_foundation(self,oa_foundation.suit)
 			return is_legal
 	return false
 
@@ -94,6 +104,10 @@ func _update_texture():
 		card_texture.set_texture(GameSettings.get_card_back())
 	else:
 		card_texture.set_texture(card_face)
+	if card.is_completed:
+		shadow.visible=false
+	else:
+		shadow.visible=true
 	
 func _handle_shadow(delta:float)->void:
 	var center: Vector2 = get_viewport_rect().size/2.0

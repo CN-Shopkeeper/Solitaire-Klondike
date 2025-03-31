@@ -1,5 +1,7 @@
 extends Node
 
+# todo: 重构这个类，分为：setting、game rules、node
+
 const CARD_BACK_BLUE = preload("res://asserts/cards/card_back_blue.png")
 const CARD_BACK_RED = preload("res://asserts/cards/card_back_red.png")
 const CARD = preload("res://scenes/card.tscn")
@@ -10,6 +12,7 @@ const WASTE_TO_STOCK_DELAY = 0.02
 
 const WAST_PILE_OFFSET_X=20.0
 
+const SUITS=["diamonds","clubs","hearts","spades"]
 const RED_SUITS=["hearts","diamonds"]
 const BLACK_SUITS=["clubs","spades"]
 const POINTS=['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -20,10 +23,13 @@ var _is_game_mode_easy:=false
 var stock_cards:ClassCardStack=ClassCardStack.new()
 var waste_cards:ClassCardStack=ClassCardStack.new()
 var tableau_cards: Array[ClassCardStack] = []
+var foundation_cards: Array[ClassCardStack] = []
 
 func _ready() -> void:
 	for i in range(7):
 		tableau_cards.append(ClassCardStack.new())
+	for i in range(4):
+		foundation_cards.append(ClassCardStack.new())
 
 func get_waste_card_nodes():
 	return get_tree().get_nodes_in_group("waste_cards")
@@ -47,13 +53,35 @@ func add_tableau_card_node(group_index:int,card:ClassCard):
 	node.set_card(card)
 	return node
 
+func get_foundation_card_nodes(suit:String):
+	return get_tree().get_nodes_in_group("foundation_%s_cards"%suit)
+
+
 # 检查是否能移动到目标牌
-func check_card_move_legal(card_source:ClassCard,card_target:ClassCard):
+func check_card_move_legal(card_source:ClassCard,card_target:ClassCard)->bool:
 	var point_index_s =POINTS.find(card_source.point)
 	var point_index_t =POINTS.find(card_target.point)
 	if point_index_s==-1 or point_index_t==-1:
 		return false
 	return (point_index_s==point_index_t-1) and ((card_source.suit in RED_SUITS and card_target.suit in BLACK_SUITS) or (card_source.suit in BLACK_SUITS and card_target.suit in RED_SUITS))
+
+# todo: 胜利条件判定，放在signal中做
+func check_card_move_foundation_legal(card_source:ClassCard,target_foundation_suit:String)->bool:
+	print(card_source.point,card_source.suit,target_foundation_suit)
+	# 花色判断
+	if card_source.suit!=target_foundation_suit:
+		return false
+	var target_stack = get_foundation_stack(target_foundation_suit)
+	# 如果当前foundation已完成，则直接判错
+	if target_stack.size()>13:
+		return false
+	var source_point_index = POINTS.find(card_source.point)
+	# 如果当前foundation为空，则点数必须为A（index=0）
+	if target_stack.size()==0:
+		print(target_stack.size(),source_point_index)
+		return source_point_index==0
+	# 否则，foundation的peek的点数必须等于source点数-1
+	return POINTS.find(target_stack.peek().point)==source_point_index-1
 
 # 移动一个牌(组)到目标牌牌堆
 func move_cards_to_tableau(card_source_node_root:Control,card_target_node:Control):
@@ -72,6 +100,24 @@ func move_cards_to_tableau(card_source_node_root:Control,card_target_node:Contro
 		node.add_to_group(target_group)
 	# stack的修改要在node之后，因为stack有信号
 	target_stack.push_n(source_stack.pop_n(nodes_to_move.size()))
+
+# 将一个牌移动到foundation
+func move_card_to_foundation(card_node:Control,suit:String):
+	var source_group=_get_group_from_node(card_node)
+	if !source_group:
+		return
+	var foundation_stack=get_foundation_stack(suit)
+	var source_stack = _get_stack_from_group(source_group)
+	if !source_stack or !foundation_stack:
+		return
+	card_node.remove_from_group(source_group)
+	
+	card_node.add_to_group("foundation_%s_cards"%suit)
+	
+	# stack的修改要在node之后，因为stack有信号
+	# 从tableau移动到foundation的card一定是处于顶部
+	foundation_stack.push(source_stack.pop())
+
 
 func find_ordering_card_nodes(root_card_node:Control)->Array:
 	var card_stack = _get_stack_from_group(_get_group_from_node(root_card_node))
@@ -123,3 +169,6 @@ func _get_stack_from_group(group:String)->ClassCardStack:
 	if group=="waste_cards":
 				return waste_cards
 	return null
+
+func get_foundation_stack(suit:String):
+	return foundation_cards[SUITS.find(suit)]

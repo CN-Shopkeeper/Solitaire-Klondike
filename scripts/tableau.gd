@@ -26,7 +26,7 @@ func _ready() -> void:
 	points.reverse()
 	var lpi=0
 	for point in points:
-		stock_cards.push(ClassCard.new(suits[index],point))
+		stock_cards.push(ClassCard.new(suits[0],point))
 		if lpi>=group_index*2:
 			break
 		index+=1

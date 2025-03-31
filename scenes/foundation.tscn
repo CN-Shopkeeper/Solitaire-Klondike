@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://blxdvbdlwsux"]
+
+[ext_resource type="Script" uid="uid://d3usrpg6km2vi" path="res://scenes/foundation.gd" id="1_amf41"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_amf41"]
+size = Vector2(44, 62)
+
+[node name="Foundation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1152.0
+offset_bottom = -648.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_amf41")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(88, 124)
+mouse_filter = 1
+color = Color(0.596078, 0.984314, 0.596078, 0.380392)
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
+offset_right = 1.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(1, 0, 0, 0.392157)
+theme_override_font_sizes/font_size = 48
+text = "♦"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Area2D" type="Area2D" parent="."]
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(44, 62)
+shape = SubResource("RectangleShape2D_amf41")
