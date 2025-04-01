@@ -9,5 +9,7 @@ func _ready() -> void:
 		tableau_group.get_child(i).reset(dealt_cards[i])
 	stock_and_waste.reset_stock(dealt_cards[7])
 
+	GameRules.connect("win", Callable(self, "_win"))
 
-
+func _win():
+	$Label.text = "you win"

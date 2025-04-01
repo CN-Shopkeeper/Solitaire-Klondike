@@ -1,5 +1,18 @@
 extends Node
 
+signal win
+
+func _ready() -> void:
+	for suit in Poker.SUITS:
+		GameData.get_foundation_stack(suit).connect("item_changed", Callable(self, "check_winning"))
+
+func check_winning():
+	var completed_cnt = 0
+	for suit in Poker.SUITS:
+		completed_cnt += GameData.get_foundation_stack(suit).size()
+	if completed_cnt == 52:
+		emit_signal("win")
+
 # 检查是否能移动到目标牌
 func check_card_move_tableau_card_legal(card_source: ClassCard, card_target: ClassCard) -> bool:
 	var point_value_s = Poker.get_point_num_value(card_source.point)
