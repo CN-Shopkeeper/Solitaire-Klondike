@@ -12,12 +12,12 @@ const WASTE_TO_STOCK_DELAY = 0.02
 
 const WAST_PILE_OFFSET_X = 20.0
 
+var playing := false
+var _is_game_mode_easy := true
 
-var _is_game_mode_easy := false
-
-
-
-
+func change_difficulty():
+	_is_game_mode_easy = !_is_game_mode_easy
+	return _is_game_mode_easy
 
 
 func get_waste_card_nodes():
