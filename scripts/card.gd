@@ -100,21 +100,21 @@ func _check_move_legal() -> bool:
 			is_legal = GameRules.check_card_move_tableau_card_legal(card, oa_card.card)
 			# 如果合法，直接返回
 			if is_legal:
-				GameSettings.move_cards_to_tableau_card(self, oa_card)
+				CardNodeManager.move_card_nodes_to_tableau(self, oa_card)
 				return true
 		# foundation检测区域
 		if oa.is_in_group("foundation_area"):
 			var oa_foundation = oa.get_parent()
 			is_legal = GameRules.check_card_move_foundation_legal(card, oa_foundation.suit)
 			if is_legal:
-				GameSettings.move_card_to_foundation(self, oa_foundation.suit)
+				CardNodeManager.move_card_node_to_foundation(self, oa_foundation.suit)
 				return is_legal
 		# tableau检测区域
 		if oa.is_in_group("tableau_area"):
 			var oa_tableau = oa.get_parent()
 			is_legal = GameRules.check_card_move_tableau_bottom_legal(card, oa_tableau.group_index)
 			if is_legal:
-				GameSettings.move_cards_to_tableau_bottom(self, oa_tableau.group_index)
+				CardNodeManager.move_card_nodes_to_tableau_bottom(self, oa_tableau.group_index)
 				return is_legal
 	return false
 
@@ -152,7 +152,7 @@ func _handle_mouse_click(event: InputEvent) -> void:
 
 		# 修改其order下的所有卡牌
 		# 创建一个临时的移动group
-		GameSettings.create_move_group_tmp(self)
+		CardNodeManager.create_move_group_tmp(self)
 		get_tree().call_group("move_group_tmp", "_update_z_index", card.point, 1)
 		# 关闭被碰撞检测
 		get_tree().call_group("move_group_tmp", "_disable_monitorable")
@@ -167,7 +167,7 @@ func _handle_mouse_click(event: InputEvent) -> void:
 
 		if not _check_move_legal():
 			get_tree().call_group("move_group_tmp", "tween_to_legal_position")
-		GameSettings.delete_move_group_tmp()
+		CardNodeManager.delete_move_group_tmp()
 
 func _handle_mouse_move(event: InputEvent) -> void:
 	if not is_activate: return
@@ -235,7 +235,7 @@ func _on_mouse_exited() -> void:
 	if not is_activate: return
 	_stop_rot()
 	# 其顺序下的所有卡牌都hover
-	var nodes = GameSettings.find_ordering_card_nodes(self)
+	var nodes = CardNodeManager.find_ordering_card_nodes(self)
 	for node in nodes:
 		node.stop_hover()
 
@@ -243,6 +243,6 @@ func _on_mouse_exited() -> void:
 func _on_mouse_entered() -> void:
 	if not is_activate: return
 	# 其顺序下的所有卡牌都hover
-	var nodes = GameSettings.find_ordering_card_nodes(self)
+	var nodes = CardNodeManager.find_ordering_card_nodes(self)
 	for node in nodes:
 		node.hover()

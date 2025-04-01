@@ -1,5 +1,4 @@
 extends Control
-const CARD = preload("res://scenes/card.tscn")
 @export var group_index: int
 @onready var card_pile: Control = $CardPile
 
@@ -27,7 +26,7 @@ func reset(new_stock_cards: ClassCardStack) -> void:
 	var index = 0
 	for card in cards.get_stack_array():
 		# 生成最新的卡牌
-		var node = GameSettings.add_tableau_card_node(group_index, card)
+		var node = CardNodeManager.create_tableau_card_node(card, group_index)
 
 		var position := global_position + Vector2(0.0, index * pile_offset_y)
 		node.position = position
@@ -36,7 +35,7 @@ func reset(new_stock_cards: ClassCardStack) -> void:
 	cards.peek().is_flipped = false
 
 func _rearrange():
-	var card_nodes = GameSettings.get_tableau_card_nodes(group_index)
+	var card_nodes = CardNodeManager.get_tableau_card_nodes(group_index)
 
 	var index = 0
 	for node in card_nodes:
