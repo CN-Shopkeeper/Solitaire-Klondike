@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://cu7sxj416hvog"]
+
+[ext_resource type="Script" uid="uid://cptju4liq6mva" path="res://tests/test_card.gd" id="1_dwc08"]
+[ext_resource type="Shader" uid="uid://cuqy8y8vmrin7" path="res://shaders/distorted_background.gdshader" id="1_xkc20"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dwc08"]
+shader = ExtResource("1_xkc20")
+shader_parameter/colour1 = Color(0, 0.392157, 0, 1)
+shader_parameter/colour2 = Color(0, 0.501961, 0, 1)
+shader_parameter/colour3 = Color(0.196078, 0.803922, 0.196078, 1)
+shader_parameter/colour4 = Color(0.235294, 0.701961, 0.443137, 1)
+shader_parameter/contrast = 5
+shader_parameter/gradual = 2.0
+shader_parameter/width1 = 0.04
+shader_parameter/width2 = 0.1
+shader_parameter/scale1 = 10.0
+shader_parameter/scale2 = 1.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/intensity = 0.2
+shader_parameter/spin_speed = 0.2
+shader_parameter/spin_amount = 1.5
+
+[node name="TestCard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dwc08")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_dwc08")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Cards" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

@@ -25,4 +25,3 @@ func _rearrange():
 		node.card.is_completed = true
 		node.legal_position = position
 		node.tween_to_legal_position()
-

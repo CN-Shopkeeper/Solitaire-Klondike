@@ -74,20 +74,6 @@ func tween_position(to_pos: Vector2, duration: float, from_pos: Vector2 = Vector
 func tween_to_legal_position():
 	return tween_position(legal_position, 0.3, position)
 
-
-
-# 销毁
-func destroy() -> void:
-	card_texture.use_parent_material = true
-	if tween_destroy and tween_destroy.is_running():
-		tween_destroy.kill()
-
-	tween_destroy = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween_destroy.tween_property(material, "shader_parameter/dissolve_value", 0.0, 2.0).from(1.0)
-	tween_destroy.parallel().tween_property(shadow, "self_modulate:a", 0.0, 1.0)
-	await tween_destroy.finished
-	queue_free()
-
 func _check_move_legal() -> bool:
 	var overlapping_areas = area.get_overlapping_areas()
 	if overlapping_areas.size() == 0:
@@ -172,7 +158,7 @@ func _handle_mouse_click(event: InputEvent) -> void:
 func _handle_mouse_move(event: InputEvent) -> void:
 	if not is_activate: return
 	if not is_following_mouse: return
-	get_tree().call_group("move_group_tmp", "_move", global_position, following_position, event.relative)
+	get_tree().call_group("move_group_tmp", "_move", get_global_mouse_position(), global_position, following_position, event.relative)
 
 func _update_z_index(root_card_point: String, root_z_index: int):
 	var point_offset = Poker.get_point_num_value(root_card_point)-Poker.get_point_num_value(card.point)
@@ -189,9 +175,9 @@ func _disable_monitorable():
 func _enable_monitorable():
 	area.monitorable = is_activate and card.is_on_top
 
-func _move(root_position: Vector2, relative_position: Vector2, mouse_velocity: Vector2):
+func _move(global_mouse_position: Vector2, root_position: Vector2, relative_position: Vector2, mouse_velocity: Vector2):
 	var pos_offset = global_position -root_position
-	global_position = get_global_mouse_position()-relative_position + pos_offset
+	global_position = global_mouse_position -relative_position + pos_offset
 
 	# 根据鼠标移动速度添加旋转
 	var lerp_val_x: float = remap(-mouse_velocity.y, -size.x / 5, size.x / 5, 0, 1)
