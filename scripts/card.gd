@@ -8,7 +8,7 @@ extends Control
 @export var angle_x_max: float = 15.0
 @export var angle_y_max: float = 15.0
 @export var max_offset_shadow: float = 20.0
-
+@export var rot_sensitivity: float = 4
 
 var card: ClassCard = ClassCard.new("hearts", "A")
 
@@ -71,8 +71,8 @@ func tween_position(to_pos: Vector2, duration: float, from_pos: Vector2 = Vector
 	return tween_move
 
 
-func tween_to_legal_position():
-	return tween_position(legal_position, 0.3, position)
+func tween_to_legal_position(duration: float = 0.3, delay: float = 0.0):
+	return tween_position(legal_position, duration, position, delay)
 
 func _check_move_legal() -> bool:
 	var overlapping_areas = area.get_overlapping_areas()
@@ -180,8 +180,8 @@ func _move(global_mouse_position: Vector2, root_position: Vector2, relative_posi
 	global_position = global_mouse_position -relative_position + pos_offset
 
 	# 根据鼠标移动速度添加旋转
-	var lerp_val_x: float = remap(-mouse_velocity.y, -size.x / 5, size.x / 5, 0, 1)
-	var lerp_val_y: float = remap(mouse_velocity.x, -size.y / 5, size.y / 5, 0, 1)
+	var lerp_val_x: float = remap(-mouse_velocity.y, -size.x / rot_sensitivity, size.x / rot_sensitivity, 0, 1)
+	var lerp_val_y: float = remap(mouse_velocity.x, -size.y / rot_sensitivity, size.y / rot_sensitivity, 0, 1)
 
 	var rot_x: float = rad_to_deg(lerp_angle(-angle_x_max, angle_x_max, lerp_val_x))
 	var rot_y: float = rad_to_deg(lerp_angle(-angle_y_max, angle_y_max, lerp_val_y))

@@ -9,26 +9,31 @@ const FOUNDATION_CARD_NODE_GROUP_NAME_TEMPLATE = "foundation_%s_cards"
 const TEMP_MOVE_GROUP_NAME = "move_group_tmp"
 
 # 创建card节点并添加到组
-func create_card_node(card: ClassCard, group_name: String, parent_path: String = "Main/Cards"):
-	var card_nodes = get_tree().root.get_node(parent_path)
+func create_card_node(card: ClassCard, group_name: String, cards_control: Control):
+	if !cards_control:
+		# 如果缺省，则默认从主场景中加载
+		cards_control = get_tree().root.get_node("Main/Cards")
 	var node = CARD.instantiate()
-	card_nodes.add_child(node)
+	cards_control.add_child(node)
 	node.add_to_group(group_name)
 	node.set_card(card)
 	return node
 
-func create_stock_card_node(card: ClassCard, parent_path: String = "Main/Cards"):
-	return create_card_node(card, STOCK_CARD_NODE_GROUP_NAME, parent_path)
+func create_stock_card_node(card: ClassCard, cards_control: Control = null):
+	return create_card_node(card, STOCK_CARD_NODE_GROUP_NAME, cards_control)
 
-func create_waste_card_node(card: ClassCard, parent_path: String = "Main/Cards"):
-	return create_card_node(card, WASTE_CARD_NODE_GROUP_NAME, parent_path)
+func create_waste_card_node(card: ClassCard, cards_control: Control = null):
+	return create_card_node(card, WASTE_CARD_NODE_GROUP_NAME, cards_control)
 
-func create_tableau_card_node(card: ClassCard, group_index: int, parent_path: String = "Main/Cards"):
-	return create_card_node(card, TABLEAU_CARD_NODE_GROUP_NAME_TEMPLATE %str(group_index), parent_path)
+func create_tableau_card_node(card: ClassCard, group_index: int, cards_control: Control = null):
+	return create_card_node(card, TABLEAU_CARD_NODE_GROUP_NAME_TEMPLATE %str(group_index), cards_control)
 
 # 根据组来获取card节点
 func get_card_nodes_by_group(group_name: String):
 	return get_tree().get_nodes_in_group(group_name)
+
+func get_stock_card_nodes():
+	return get_card_nodes_by_group(STOCK_CARD_NODE_GROUP_NAME)
 
 func get_waste_card_nodes():
 	return get_card_nodes_by_group(WASTE_CARD_NODE_GROUP_NAME)
@@ -38,6 +43,42 @@ func get_tableau_card_nodes(group_index: int):
 
 func get_foundation_card_nodes(suit: String):
 	return get_card_nodes_by_group(FOUNDATION_CARD_NODE_GROUP_NAME_TEMPLATE %suit)
+
+
+# 移动stock顶部的牌到waste
+func move_card_from_stock_to_waste():
+	if GameData.get_stock_stack().size() == 0:
+		return
+
+	var source_stack = GameData.get_stock_stack()
+	var target_stack = GameData.get_waste_stack()
+
+	var card = source_stack.pop()
+	var card_node = card.owning_node.get_ref()
+	card_node.remove_from_group(STOCK_CARD_NODE_GROUP_NAME)
+	card_node.add_to_group(WASTE_CARD_NODE_GROUP_NAME)
+
+	# 在场景树中移动到最上方
+	card_node.get_parent().move_child(card_node, -1)
+
+	# stack的修改要在node之后，因为stack有信号
+	target_stack.push(card)
+
+# 移动waste顶部的牌到stock，一张一张移动，因为要处理动画
+func move_card_from_waste_to_stock():
+	if GameData.get_waste_stack().size() == 0:
+		return
+
+	var card = GameData.get_waste_stack().pop()
+	var card_node = card.owning_node.get_ref()
+	card_node.remove_from_group(WASTE_CARD_NODE_GROUP_NAME)
+	card_node.add_to_group(STOCK_CARD_NODE_GROUP_NAME)
+
+	# 在场景树中移动到最上方
+	card_node.get_parent().move_child(card_node, -1)
+
+	# stack的修改要在node之后，因为stack有信号
+	GameData.get_stock_stack().push(card)
 
 # 移动一个牌(组)到目标牌牌堆
 func move_card_nodes_to_tableau(card_source_node_root: Control, card_target_node: Control):
@@ -54,6 +95,10 @@ func move_card_nodes_to_tableau(card_source_node_root: Control, card_target_node
 	for node in nodes_to_move:
 		node.remove_from_group(source_group)
 		node.add_to_group(target_group)
+
+		# 在场景树中移动到最上方
+		node.get_parent().move_child(node, -1)
+
 	# stack的修改要在node之后，因为stack有信号
 	target_stack.push_n(source_stack.pop_n(nodes_to_move.size()))
 
@@ -72,6 +117,10 @@ func move_card_nodes_to_tableau_bottom(card_source_node_root: Control, tableau_i
 	for node in nodes_to_move:
 		node.remove_from_group(source_group)
 		node.add_to_group(target_group)
+
+		# 在场景树中移动到最上方
+		node.get_parent().move_child(node, -1)
+
 	# stack的修改要在node之后，因为stack有信号
 	target_stack.push_n(source_stack.pop_n(nodes_to_move.size()))
 

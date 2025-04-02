@@ -1,6 +1,5 @@
 extends Control
 @export var group_index: int
-@onready var card_pile: Control = $CardPile
 
 
 var cards: ClassCardStack:
@@ -20,9 +19,8 @@ func _ready() -> void:
 
 	cards.connect("item_changed", Callable(self, "_rearrange"))
 
-func reset(new_stock_cards: ClassCardStack) -> void:
-	_clear_all_cards()
-	cards.assign(new_stock_cards)
+func reset(new_cards: ClassCardStack) -> void:
+	cards.assign(new_cards)
 	var index = 0
 	for card in cards.get_stack_array():
 		# 生成最新的卡牌
@@ -47,7 +45,3 @@ func _rearrange():
 	# 尝试将最上面一张翻开
 	if card_nodes.size() > 0:
 		card_nodes[-1].card.is_flipped = false
-
-func _clear_all_cards() -> void:
-	for child in card_pile.get_children():
-		child.queue_free()  # 从场景树中移除并销毁子节点

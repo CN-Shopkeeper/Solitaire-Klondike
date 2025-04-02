@@ -16,5 +16,4 @@ layout_mode = 2
 [node name="Waste" parent="." instance=ExtResource("2_4uw5a")]
 layout_mode = 2
 
-[connection signal="stock_card_popped" from="Stock" to="." method="_on_stock_stock_card_popped"]
-[connection signal="stock_to_shuffle" from="Stock" to="." method="_on_stock_stock_to_shuffle"]
+[connection signal="stock_pressed" from="Stock" to="." method="_on_stock_stock_pressed"]

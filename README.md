@@ -4,9 +4,13 @@ Solitaire Klondike game made in godot engine
 
 ### Preview
 
+### Card
+
+![Card](screenshots/card.gif)
+
 #### Stock and Waste
 
-![Stock and Waste](screenshots/stock_waste.gif)
+![Stock and Waste](screenshots/stock_and_waste.gif)
 
 #### Tableau
 

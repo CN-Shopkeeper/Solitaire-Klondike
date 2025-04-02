@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://dpxqjic3xdfxw"]
+
+[ext_resource type="Script" uid="uid://8aqj0oae2wl1" path="res://tests/test_stock_and_waste.gd" id="1_4hjn0"]
+[ext_resource type="PackedScene" uid="uid://cbna67o8yxxrl" path="res://scenes/stock_and_waste.tscn" id="2_f7td2"]
+[ext_resource type="Shader" uid="uid://cuqy8y8vmrin7" path="res://shaders/distorted_background.gdshader" id="2_jigmy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ps1kd"]
+shader = ExtResource("2_jigmy")
+shader_parameter/colour1 = Color(0, 0.392157, 0, 1)
+shader_parameter/colour2 = Color(0, 0.501961, 0, 1)
+shader_parameter/colour3 = Color(0.196078, 0.803922, 0.196078, 1)
+shader_parameter/colour4 = Color(0.235294, 0.701961, 0.443137, 1)
+shader_parameter/contrast = 5
+shader_parameter/gradual = 2.0
+shader_parameter/width1 = 0.04
+shader_parameter/width2 = 0.1
+shader_parameter/scale1 = 10.0
+shader_parameter/scale2 = 1.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/intensity = 0.2
+shader_parameter/spin_speed = 0.2
+shader_parameter/spin_amount = 1.5
+
+[node name="TestStockAndWaste" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4hjn0")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_ps1kd")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StockAndWaste" parent="." node_paths=PackedStringArray("cards_control") instance=ExtResource("2_f7td2")]
+layout_mode = 0
+offset_left = 300.0
+offset_top = 100.0
+offset_right = 412.0
+offset_bottom = 224.0
+cards_control = NodePath("../Cards")
+
+[node name="Cards" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

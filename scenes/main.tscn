@@ -57,9 +57,10 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="StockAndWaste" parent="CenterContainer/CardTable/HBoxContainer" instance=ExtResource("2_0wfyh")]
+[node name="StockAndWaste" parent="CenterContainer/CardTable/HBoxContainer" node_paths=PackedStringArray("cards_control") instance=ExtResource("2_0wfyh")]
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 0
+cards_control = NodePath("../../../../Cards")
 
 [node name="Foundation" type="HBoxContainer" parent="CenterContainer/CardTable/HBoxContainer"]
 layout_mode = 2
