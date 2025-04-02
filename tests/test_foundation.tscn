@@ -1,0 +1,84 @@
+[gd_scene load_steps=6 format=3 uid="uid://bvd6qi2u430ie"]
+
+[ext_resource type="Script" uid="uid://c3iq4o127k5sn" path="res://tests/test_foundation.gd" id="1_dub6w"]
+[ext_resource type="Shader" uid="uid://cuqy8y8vmrin7" path="res://shaders/distorted_background.gdshader" id="1_m5p3u"]
+[ext_resource type="PackedScene" uid="uid://blxdvbdlwsux" path="res://scenes/foundation.tscn" id="2_dub6w"]
+[ext_resource type="PackedScene" uid="uid://h3r2odapwqpq" path="res://scenes/tableau.tscn" id="3_crc1f"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a5q1s"]
+shader = ExtResource("1_m5p3u")
+shader_parameter/colour1 = Color(0, 0.392157, 0, 1)
+shader_parameter/colour2 = Color(0, 0.501961, 0, 1)
+shader_parameter/colour3 = Color(0.196078, 0.803922, 0.196078, 1)
+shader_parameter/colour4 = Color(0.235294, 0.701961, 0.443137, 1)
+shader_parameter/contrast = 5
+shader_parameter/gradual = 2.0
+shader_parameter/width1 = 0.04
+shader_parameter/width2 = 0.1
+shader_parameter/scale1 = 10.0
+shader_parameter/scale2 = 1.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/intensity = 0.2
+shader_parameter/spin_speed = 0.2
+shader_parameter/spin_amount = 1.5
+
+[node name="TestFoundation" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dub6w")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_a5q1s")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 100.0
+offset_right = 100.0
+offset_bottom = 396.0
+grow_horizontal = 2
+theme_override_constants/separation = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Foundation" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_dub6w")]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+suit = "hearts"
+suit_color = Color(1, 0, 0, 0.392157)
+
+[node name="Tableau_1" parent="HBoxContainer/VBoxContainer" node_paths=PackedStringArray("cards_control") instance=ExtResource("3_crc1f")]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+group_index = 1
+cards_control = NodePath("../../../Cards")
+
+[node name="Tableau_2" parent="HBoxContainer/VBoxContainer" node_paths=PackedStringArray("cards_control") instance=ExtResource("3_crc1f")]
+layout_mode = 2
+group_index = 2
+cards_control = NodePath("../../../Cards")
+
+[node name="Tableau_0" parent="HBoxContainer" node_paths=PackedStringArray("cards_control") instance=ExtResource("3_crc1f")]
+custom_minimum_size = Vector2(88, 124)
+layout_mode = 2
+cards_control = NodePath("../../Cards")
+
+[node name="Cards" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

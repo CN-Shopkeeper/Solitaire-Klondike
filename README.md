@@ -16,6 +16,10 @@ Solitaire Klondike game made in godot engine
 
 ![Tableau](screenshots/tableau.gif)
 
+#### Foundation
+
+![Foundation](screenshots/foundation.gif)
+
 ### Reference
 
 - Poker Cards assets: [poker-pack](https://screamingbrainstudios.itch.io/poker-pack)
