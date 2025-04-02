@@ -14,13 +14,14 @@ func _ready() -> void:
 
 func reset_stock(new_stock_cards: ClassCardStack):
 	stock_cards.assign(new_stock_cards)
+
 	var index = 0
 	for card in stock_cards.get_stack_array():
 		# 生成最新的卡牌
 		var node = CardNodeManager.create_stock_card_node(card, cards_control)
 
-		node.position = stock.position
-		node.legal_position = stock.position
+		node.position = stock.global_position
+		node.legal_position = stock.global_position
 		index += 1
 
 

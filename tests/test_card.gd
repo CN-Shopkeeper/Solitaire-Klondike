@@ -32,17 +32,17 @@ func _ready() -> void:
 	CardNodeManager.create_card_node(card_hearts_a, SINGLE_CARD_GROUP_NAME, cards)
 	single_card_stack.push(card_hearts_a)
 
-	#var suit_index = 0
-	#var points_copy = Poker.POINTS.duplicate()
-	#points_copy.reverse()
-	#for point in points_copy:
-		#var suit = Poker.SUITS[suit_index]
-		#suit_index += 1
-		#suit_index %= 4
-		#var new_card = ClassCard.new(suit, point)
-		#new_card.is_flipped = false
-		#CardNodeManager.create_card_node(new_card, PILE_CARD_GROUP_NAME, cards)
-		#card_pile_stack.push(new_card)
+	var suit_index = 0
+	var points_copy = Poker.POINTS.duplicate()
+	points_copy.reverse()
+	for point in points_copy:
+		var suit = Poker.SUITS[suit_index]
+		suit_index += 1
+		suit_index %= 4
+		var new_card = ClassCard.new(suit, point)
+		new_card.is_flipped = false
+		CardNodeManager.create_card_node(new_card, PILE_CARD_GROUP_NAME, cards)
+		card_pile_stack.push(new_card)
 
 func _physics_process(delta: float) -> void:
 	pass

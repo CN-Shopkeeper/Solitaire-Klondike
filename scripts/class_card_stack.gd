@@ -75,6 +75,7 @@ func size() -> int:
 func assign(other: ClassCardStack) -> void:
 	_stack = other._get_stack_copy()
 
+
 # 获取栈的只读副本
 func get_stack_array() -> Array:
 	return _stack.duplicate(true)  # 返回栈的深拷贝，避免外部修改原始栈

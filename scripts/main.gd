@@ -1,6 +1,6 @@
 extends Control
-@onready var tableau_group: HBoxContainer = $CenterContainer/MarginContainer/Tableau_group
-@onready var stock_and_waste: HBoxContainer = $CenterContainer/CardTable/HBoxContainer/StockAndWaste
+@onready var tableau_group: HBoxContainer = $CardTable/MarginContainer/Tableau_group
+@onready var stock_and_waste: HBoxContainer = $CardTable/HBoxContainer/HBoxContainer/StockAndWaste
 @onready var difficulty: Button = $UI/Top/Difficulty
 @onready var start: Button = $UI/Top/Start
 @onready var tips: Button = $UI/Top/Tips

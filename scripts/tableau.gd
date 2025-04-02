@@ -1,6 +1,7 @@
 extends Control
 @export var group_index: int
-
+# cards node的父节点
+@export var cards_control: Control
 
 var cards: ClassCardStack:
 	get:
@@ -21,15 +22,17 @@ func _ready() -> void:
 
 func reset(new_cards: ClassCardStack) -> void:
 	cards.assign(new_cards)
+
 	var index = 0
 	for card in cards.get_stack_array():
 		# 生成最新的卡牌
-		var node = CardNodeManager.create_tableau_card_node(card, group_index)
+		var node = CardNodeManager.create_tableau_card_node(card, group_index, cards_control)
 
 		var position := global_position + Vector2(0.0, index * pile_offset_y)
 		node.position = position
 		node.legal_position = position
 		index += 1
+
 	cards.peek().is_flipped = false
 
 func _rearrange():

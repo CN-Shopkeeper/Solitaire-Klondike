@@ -4,7 +4,7 @@ Solitaire Klondike game made in godot engine
 
 ### Preview
 
-### Card
+#### Card
 
 ![Card](screenshots/card.gif)
 
