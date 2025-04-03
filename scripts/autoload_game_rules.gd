@@ -55,12 +55,14 @@ func deal() -> Array[ClassCardStack]:
 	var deck = Poker.generate_deck()
 	var deck_count = 52
 	# 7个牌桌堆和一个牌库
-	var table_to_deal_count = [1, 2, 3, 4, 5, 6, 7, 24]
-	var dealt_cards: Array[ClassCardStack] = []
-	for i in table_to_deal_count:
-		dealt_cards.append(ClassCardStack.new())
+	var tableau_to_deal_count: Array[int] = [1, 2, 3, 4, 5, 6, 7]
+	var stock_to_deal_count = 24
 
 	var stock_tmp_array: Array[ClassCard] = []
+	var dealt_tableau_cards: Array[ClassCardStack] = []
+	for i in tableau_to_deal_count:
+		dealt_tableau_cards.append(ClassCardStack.new())
+
 	while deck_count > 0:
 		# deck随机选择一个花色取出最顶上的牌
 		var random_suit_index = randi() % 4  # 生成0-3的随机数
@@ -69,19 +71,49 @@ func deal() -> Array[ClassCardStack]:
 			random_suit_index %= 4
 		var card = deck[random_suit_index].pop()
 		# 随机加入到一个dealt_cards
-		if table_to_deal_count[7] == deck_count or (table_to_deal_count[7] > 0 and randi() % 2 == 0):
+		if stock_to_deal_count == deck_count or (stock_to_deal_count > 0 and randi() % 2 == 0):
 			# 50%的概率加入stock
-			table_to_deal_count[7] -= 1
+			stock_to_deal_count -= 1
 			stock_tmp_array.append(card)
 		else:
 			# 否则加入tableau
-			var random_dealt_index = randi() % 7  # 生成0-7的随机数
-			while table_to_deal_count[random_dealt_index] == 0:
+			var random_dealt_index = _weighted_random_select_tableau(tableau_to_deal_count)
+			# 正常情况下，不会经过哪怕一次循环
+			while tableau_to_deal_count[random_dealt_index] == 0:
 				random_dealt_index += 1
 				random_dealt_index %= 7
-			table_to_deal_count[random_dealt_index] -= 1
-			dealt_cards[random_dealt_index].push(card)
+			tableau_to_deal_count[random_dealt_index] -= 1
+			dealt_tableau_cards[random_dealt_index].push(card)
 		deck_count -= 1
 	stock_tmp_array.shuffle()
-	dealt_cards[7].push_n(stock_tmp_array)
+	var dealt_stock_cards = ClassCardStack.new()
+	dealt_stock_cards.push_n(stock_tmp_array)
+	var dealt_cards = dealt_tableau_cards
+	dealt_cards.append(dealt_stock_cards)
 	return dealt_cards
+
+func _weighted_random_select_tableau(tableau_to_deal_count: Array[int]) -> int:
+	var prefix_and = []
+	var total_cnt = 0
+
+	for i in range(tableau_to_deal_count.size()):
+		var cnt = tableau_to_deal_count[i]
+		total_cnt += cnt
+		if 0 == i:
+			prefix_and.append(cnt)
+		else:
+			prefix_and.append(prefix_and[i -1] + cnt)
+
+		i += 1
+
+	var pos = randi() % total_cnt
+
+	var index = 0
+
+	for i in range(prefix_and.size()):
+		var prefix = prefix_and[i]
+		if prefix >= pos:
+			index = i
+			break
+
+	return index
