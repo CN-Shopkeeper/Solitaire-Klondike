@@ -15,8 +15,6 @@ var card: ClassCard = ClassCard.new("hearts", "A")
 var legal_position: Vector2
 var tween_move: Tween
 
-
-
 var is_activate: bool:
 	get:
 		return ((card.is_on_top or card.is_in_order)
@@ -51,7 +49,8 @@ func set_card(_card: ClassCard) -> void:
 	card = _card
 	card.owning_node = weakref(self)
 	card_face = load(card.get_texture_path())
-	card.connect("card_state_changed", Callable(self, "_on_card_state_changed"))
+	if not card.is_connected("card_state_changed", Callable(self, "_on_card_state_changed")):
+		card.connect("card_state_changed", Callable(self, "_on_card_state_changed"))
 	_update_texture()
 
 
@@ -86,6 +85,7 @@ func _check_move_legal() -> bool:
 			is_legal = GameRules.check_card_move_tableau_card_legal(card, oa_card.card)
 			# 如果合法，直接返回
 			if is_legal:
+				GameSettings.save_state()
 				CardNodeManager.move_card_nodes_to_tableau(self, oa_card)
 				return true
 		# foundation检测区域
@@ -93,6 +93,7 @@ func _check_move_legal() -> bool:
 			var oa_foundation = oa.get_parent()
 			is_legal = GameRules.check_card_move_foundation_legal(card, oa_foundation.suit)
 			if is_legal:
+				GameSettings.save_state()
 				CardNodeManager.move_card_node_to_foundation(self, oa_foundation.suit)
 				return is_legal
 		# tableau检测区域
@@ -100,6 +101,7 @@ func _check_move_legal() -> bool:
 			var oa_tableau = oa.get_parent()
 			is_legal = GameRules.check_card_move_tableau_bottom_legal(card, oa_tableau.group_index)
 			if is_legal:
+				GameSettings.save_state()
 				CardNodeManager.move_card_nodes_to_tableau_bottom(self, oa_tableau.group_index)
 				return is_legal
 	return false
@@ -120,7 +122,7 @@ func _update_texture():
 	else:
 		shadow.visible = true
 
-func _handle_shadow(delta: float) -> void:
+func _handle_shadow(_delta: float) -> void:
 	var center: Vector2 = get_viewport_rect().size / 2.0
 	var distance: float = global_position.x -center.x
 

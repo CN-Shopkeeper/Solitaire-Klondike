@@ -1,10 +1,14 @@
 class_name ClassCardStack
-extends Node
+extends Resource
 
 signal item_changed
 
-var _stack: Array = []  # 使用 Array 来模拟栈
+var stack_name:String
+var _stack: Array[ClassCard] = []  # 使用 Array 来模拟栈
 
+func _init(_stack_name="") -> void:
+	stack_name = _stack_name
+	
 
 # 推入元素（push）
 func push(value: ClassCard) -> void:
@@ -52,10 +56,21 @@ func clear() -> void:
 	_stack.clear()
 	emit_signal("item_changed")
 
+func assign(other: ClassCardStack) -> void:
+	_stack = other._stack
+	_arrange_item()
+	emit_signal("item_changed")
+
 # 洗牌，应该只用于stock
 func shuffle() -> void:
 	_stack.shuffle()
 	_arrange_item()
+
+func get_copy():
+	var new_stack = ClassCardStack.new(stack_name)
+	for card in _stack:
+		new_stack._stack.append(card.get_copy())
+	return new_stack
 
 # 查找第一个匹配的card，并返回从该元素到栈底的数组拷贝
 func find_first_and_get_sublist(card: ClassCard) -> Array:
@@ -72,17 +87,10 @@ func is_empty() -> bool:
 func size() -> int:
 	return _stack.size()
 
-func assign(other: ClassCardStack) -> void:
-	_stack = other._get_stack_copy()
-
-
 # 获取栈的只读副本
 func get_stack_array() -> Array:
-	return _stack.duplicate(true)  # 返回栈的深拷贝，避免外部修改原始栈
+	return _stack
 
-# 获取栈的深拷贝（内部使用）
-func _get_stack_copy() -> Array:
-	return _stack.duplicate(true)
 
 # 更新卡牌元素的属性，不对flipped属性修改
 func _arrange_item() -> void:
@@ -94,6 +102,9 @@ func _arrange_item() -> void:
 	var last_point_value = Poker.get_point_num_value(peek().point)
 	while index >= 0:
 		var card = _stack[index]
+		card.owning_stack=stack_name
+		if card.get_owning_node():
+			card.get_owning_node().set_card(card)
 		if index == _stack.size()-1:
 			card.is_on_top = true
 			card.is_in_order = true

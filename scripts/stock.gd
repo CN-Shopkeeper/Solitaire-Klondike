@@ -10,9 +10,6 @@ func _ready() -> void:
 	call_deferred("_make_texture_button_top_level")
 
 
-func _process(delta: float) -> void:
-	pass
-
 func disable_button(disabled: bool):
 	texture_button.disabled = disabled
 
@@ -31,15 +28,17 @@ func _rearrange():
 	var card_nodes = CardNodeManager.get_stock_card_nodes()
 
 	var parent_position = global_position
-	var index = 0
+	var delay_index = 0
 	for node in card_nodes:
 		node.legal_position = parent_position
-		var tween_move = node.tween_to_legal_position(GameSettings.WASTE_TO_STOCK_DURATION, GameSettings.WASTE_TO_STOCK_DELAY * index)
-		tween_move.finished.connect(func():
-			# 所有牌翻面
-			node.card.is_flipped = true
-		)
-		index += 1
+		if node.position != node.legal_position:
+			var tween_move = node.tween_to_legal_position(GameSettings.WASTE_TO_STOCK_DURATION, GameSettings.WASTE_TO_STOCK_DELAY * delay_index)
+			tween_move.finished.connect(func():
+				# 所有牌翻面
+				node.card.is_flipped = true
+			)
+
+			delay_index += 1
 
 
 

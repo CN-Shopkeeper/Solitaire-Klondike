@@ -21,18 +21,13 @@ func _ready() -> void:
 	cards.connect("item_changed", Callable(self, "_rearrange"))
 
 func reset(new_cards: ClassCardStack) -> void:
-	cards.assign(new_cards)
-
-	var index = 0
-	for card in cards.get_stack_array():
+	# 防止从外部修改
+	new_cards = new_cards.get_copy()
+	for card in new_cards.get_stack_array():
 		# 生成最新的卡牌
-		var node = CardNodeManager.create_tableau_card_node(card, group_index, cards_control)
+		CardNodeManager.create_tableau_card_node(card, group_index, cards_control)
 
-		var position := global_position + Vector2(0.0, index * pile_offset_y)
-		node.position = position
-		node.legal_position = position
-		index += 1
-
+	cards.assign(new_cards)
 	cards.peek().is_flipped = false
 
 func _rearrange():
@@ -40,9 +35,10 @@ func _rearrange():
 
 	var index = 0
 	for node in card_nodes:
-		var position := global_position + Vector2(0.0, index * pile_offset_y)
-		node.legal_position = position
-		node.tween_to_legal_position()
+		var legal_position := global_position + Vector2(0.0, index * pile_offset_y)
+		node.legal_position = legal_position
+		if node.position != node.legal_position:
+			node.tween_to_legal_position()
 		index += 1
 
 	# 尝试将最上面一张翻开

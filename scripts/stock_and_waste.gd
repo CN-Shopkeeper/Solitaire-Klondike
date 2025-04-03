@@ -13,21 +13,22 @@ func _ready() -> void:
 	pass
 
 func reset_stock(new_stock_cards: ClassCardStack):
-	stock_cards.assign(new_stock_cards)
-
-	var index = 0
-	for card in stock_cards.get_stack_array():
+	new_stock_cards = new_stock_cards.get_copy()
+	for card in new_stock_cards.get_stack_array():
 		# 生成最新的卡牌
-		var node = CardNodeManager.create_stock_card_node(card, cards_control)
+		CardNodeManager.create_stock_card_node(card, cards_control)
 
-		node.position = stock.global_position
-		node.legal_position = stock.global_position
-		index += 1
-
+	stock_cards.assign(new_stock_cards)
 
 func _on_stock_stock_pressed() -> void:
 	if stock_cards.is_empty():
 		# 如果牌库为空，则从废牌堆重置牌库
+
+		# 如果废牌堆也为空，则什么都不做
+		if waste_cards.is_empty():
+			return
+
+		GameSettings.save_state()
 		stock.disable_button(true)
 		while not waste_cards.is_empty():
 			CardNodeManager.move_card_from_waste_to_stock()
@@ -40,4 +41,5 @@ func _on_stock_stock_pressed() -> void:
 		stock.disable_button(false)
 	else:
 		# 否则从牌库取出一张牌到废牌堆
+		GameSettings.save_state()
 		CardNodeManager.move_card_from_stock_to_waste()

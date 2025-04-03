@@ -20,8 +20,8 @@ func _ready() -> void:
 func _rearrange():
 	var card_nodes = CardNodeManager.get_foundation_card_nodes(suit)
 
-	var position := global_position
+	var legal_position := global_position
 	for node in card_nodes:
 		node.card.is_completed = true
-		node.legal_position = position
+		node.legal_position = legal_position
 		node.tween_to_legal_position()
