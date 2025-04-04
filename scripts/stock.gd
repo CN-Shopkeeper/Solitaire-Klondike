@@ -34,6 +34,7 @@ func _rearrange():
 		if node.position != node.legal_position:
 			var tween_move = node.tween_to_legal_position(GameSettings.WASTE_TO_STOCK_DURATION, GameSettings.WASTE_TO_STOCK_DELAY * delay_index)
 			tween_move.finished.connect(func():
+				node.play_audio_shuffle()
 				# 所有牌翻面
 				node.card.is_flipped = true
 			)

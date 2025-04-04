@@ -88,6 +88,7 @@ func move_card_from_stock_to_waste():
 
 	# stack的修改要在node之后，因为stack有信号
 	target_stack.push(card)
+	return card_node
 
 # 移动waste顶部的牌到stock，一张一张移动，因为要处理动画
 func move_card_from_waste_to_stock():
@@ -102,6 +103,7 @@ func move_card_from_waste_to_stock():
 
 	# stack的修改要在node之后，因为stack有信号
 	GameData.get_stock_stack().push(card)
+	return card_node
 
 # 移动一个牌(组)到目标牌牌堆
 func move_card_nodes_to_tableau(card_source_node_root: Control, card_target_node: Control):

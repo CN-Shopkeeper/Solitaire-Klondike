@@ -1,14 +1,22 @@
 extends Control
 
+@onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
+
 @onready var card_texture: TextureRect = $CardTexture
 @onready var shadow: TextureRect = $Shadow
 @onready var area: Area2D = $Area
-
 @export var card_face: Texture2D = preload("res://asserts/cards/hearts_A.png")
 @export var angle_x_max: float = 15.0
 @export var angle_y_max: float = 15.0
 @export var max_offset_shadow: float = 20.0
 @export var rot_sensitivity: float = 4
+
+const PICK_UP = preload("res://asserts/audio_effect/pick_up.wav")
+const PUT_DOWN_RIGHT = preload("res://asserts/audio_effect/put_down_right.wav")
+const PUT_DOWN_WRONG = preload("res://asserts/audio_effect/put_down_wrong.wav")
+const DEAL = preload("res://asserts/audio_effect/deal.wav")
+const SHUFFLE = preload("res://asserts/audio_effect/shuffle.wav")
+
 
 var card: ClassCard = ClassCard.new("hearts", "A")
 
@@ -129,6 +137,28 @@ func _handle_shadow(_delta: float) -> void:
 	shadow.position.x = lerp(0.0, max_offset_shadow * sign(distance), abs(distance / center.x))
 
 
+func play_audio_deal():
+	audio_stream_player.stream = DEAL
+	audio_stream_player.play()
+
+func play_audio_shuffle():
+	audio_stream_player.stream = SHUFFLE
+	audio_stream_player.play()
+
+func _play_audio_pick_up():
+	audio_stream_player.stream = PICK_UP
+	audio_stream_player.play()
+
+func _play_audio_pick_down_right():
+	audio_stream_player.stream = PUT_DOWN_RIGHT
+	audio_stream_player.play()
+
+func _play_audio_pick_down_wrong():
+	audio_stream_player.stream = PUT_DOWN_WRONG
+	audio_stream_player.play()
+
+
+
 func _handle_mouse_click(event: InputEvent) -> void:
 	if not is_activate: return
 	if event.button_index != MOUSE_BUTTON_LEFT: return
@@ -144,7 +174,7 @@ func _handle_mouse_click(event: InputEvent) -> void:
 		get_tree().call_group("move_group_tmp", "_update_z_index", card.point, 1)
 		# 关闭被碰撞检测
 		get_tree().call_group("move_group_tmp", "_disable_monitorable")
-
+		_play_audio_pick_up()
 	else:
 		is_following_mouse = false
 
@@ -155,6 +185,9 @@ func _handle_mouse_click(event: InputEvent) -> void:
 
 		if not _check_move_legal():
 			get_tree().call_group("move_group_tmp", "tween_to_legal_position")
+			_play_audio_pick_down_wrong()
+		else:
+			_play_audio_pick_down_right()
 		CardNodeManager.delete_move_group_tmp()
 
 func _handle_mouse_move(event: InputEvent) -> void:

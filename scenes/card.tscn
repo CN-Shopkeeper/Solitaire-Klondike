@@ -53,6 +53,8 @@ monitorable = false
 position = Vector2(44, 62)
 shape = SubResource("RectangleShape2D_rh58l")
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

@@ -7,6 +7,11 @@ extends Control
 @onready var cancel: Button = $UI/Top/Cancel
 @onready var foundation: HBoxContainer = $CardTable/HBoxContainer/HBoxContainer/Foundation
 @onready var cards_control: Control = $Cards
+@onready var audio_stream_player: AudioStreamPlayer = $UI/AudioStreamPlayer
+
+const TIPS = preload("res://asserts/audio_effect/tips.wav")
+const UNDO = preload("res://asserts/audio_effect/undo.wav")
+const GAME_SUCCESS = preload("res://asserts/audio_effect/game_success.mp3")
 
 func _ready() -> void:
 	GameRules.connect("win", Callable(self, "_win"))
@@ -15,7 +20,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	cancel.disabled = GameSettings.undo_stack.size() == 0 or not GameSettings.playing
-	tips.disabled = not GameSettings.playing
+	tips.disabled = not GameSettings.playing or ( not GameSettings.is_tips_cnt_left())
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -24,7 +29,19 @@ func _input(event: InputEvent) -> void:
 
 func _win():
 	GameSettings.playing = false
+	_play_audio_win()
 
+func _play_audio_undo():
+	audio_stream_player.stream = UNDO
+	audio_stream_player.play()
+
+func _play_audio_tips():
+	audio_stream_player.stream = TIPS
+	audio_stream_player.play()
+
+func _play_audio_win():
+	audio_stream_player.stream = GAME_SUCCESS
+	audio_stream_player.play()
 
 func _on_difficulty_pressed() -> void:
 	var is_game_mode_easy = GameSettings.change_difficulty()
@@ -47,9 +64,14 @@ func _on_start_pressed() -> void:
 
 func _on_cancel_pressed() -> void:
 	GameSettings.undo()
+	_play_audio_undo()
 
 
 func _on_tips_pressed() -> void:
+	if not GameSettings.is_tips_cnt_left():
+		return
+	GameSettings.spend_tips_cnt()
+	_play_audio_tips()
 	var tips = GameRules.get_tips_foundation()
 	if tips:
 		print(tips)

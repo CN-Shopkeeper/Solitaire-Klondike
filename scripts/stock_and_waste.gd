@@ -1,6 +1,7 @@
 extends HBoxContainer
 @onready var stock: Control = $Stock
 @onready var waste: Control = $Waste
+@onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
 
 # cards node的父节点
 @export var cards_control: Control
@@ -19,6 +20,8 @@ func reset_stock(new_stock_cards: ClassCardStack):
 		CardNodeManager.create_stock_card_node(card, cards_control)
 
 	stock_cards.assign(new_stock_cards)
+
+
 
 func _on_stock_stock_pressed() -> void:
 	if stock_cards.is_empty():
@@ -44,5 +47,6 @@ func _on_stock_stock_pressed() -> void:
 		GameSettings.save_state()
 		var to_draw_number = GameSettings.stock_draw_number
 		while to_draw_number > 0:
-			CardNodeManager.move_card_from_stock_to_waste()
+			var node = CardNodeManager.move_card_from_stock_to_waste()
+			node.play_audio_deal()
 			to_draw_number -= 1

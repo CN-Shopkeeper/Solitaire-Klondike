@@ -16,4 +16,6 @@ layout_mode = 2
 [node name="Waste" parent="." instance=ExtResource("2_4uw5a")]
 layout_mode = 2
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
 [connection signal="stock_pressed" from="Stock" to="." method="_on_stock_stock_pressed"]
