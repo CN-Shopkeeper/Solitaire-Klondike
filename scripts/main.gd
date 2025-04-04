@@ -8,6 +8,7 @@ extends Control
 @onready var foundation: HBoxContainer = $CardTable/HBoxContainer/HBoxContainer/Foundation
 @onready var cards_control: Control = $Cards
 @onready var audio_stream_player: AudioStreamPlayer = $UI/AudioStreamPlayer
+@onready var win: Label = $UI/Win
 
 const TIPS = preload("res://asserts/audio_effect/tips.wav")
 const UNDO = preload("res://asserts/audio_effect/undo.wav")
@@ -29,6 +30,7 @@ func _input(event: InputEvent) -> void:
 
 func _win():
 	GameSettings.playing = false
+	win.show()
 	_play_audio_win()
 
 func _play_audio_undo():
@@ -52,6 +54,7 @@ func _on_difficulty_pressed() -> void:
 
 
 func _on_start_pressed() -> void:
+	win.hide()
 	GameSettings.clear()
 
 	var dealt_cards = GameRules.deal()
