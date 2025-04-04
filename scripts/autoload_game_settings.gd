@@ -2,8 +2,8 @@ extends Node
 
 # todo: 重构这个类，分为：setting、game rules、node
 
-const CARD_BACK_BLUE = preload("res://asserts/cards/card_back_blue.png")
-const CARD_BACK_RED = preload("res://asserts/cards/card_back_red.png")
+const CARD_BACK_BLUE = preload("res://assets/cards/card_back_blue.png")
+const CARD_BACK_RED = preload("res://assets/cards/card_back_red.png")
 const CARD = preload("res://scenes/card.tscn")
 
 const TIPS_CARD_DURATION = 1

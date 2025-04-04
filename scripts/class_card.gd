@@ -42,7 +42,7 @@ var _texture_path: String
 func _init(_suit: String, _point: String) -> void:
 	suit = _suit
 	point = _point
-	_texture_path = "res://asserts/cards/%s_%s.png"%[suit, point]
+	_texture_path = "res://assets/cards/%s_%s.png"%[suit, point]
 
 func get_owning_node():
 	if !owning_node:

@@ -4,6 +4,8 @@ Solitaire Klondike game made in godot engine
 
 ### Preview
 
+![Game](screenshots/game.png)
+
 #### Card
 
 ![Card](screenshots/card.gif)
@@ -29,6 +31,10 @@ Solitaire Klondike game made in godot engine
 ![Tips](screenshots/tips.gif)
 
 ### Reference
+
+- Shader background: [Shader 类小丑牌背景效果](https://post.tuclink.com/zh/post/shader/shader-2)
+
+- Shader card: [2D-perspective](https://godotshaders.com/shader/2d-perspective/)
 
 - Poker Cards assets: [poker-pack](https://screamingbrainstudios.itch.io/poker-pack)
 
