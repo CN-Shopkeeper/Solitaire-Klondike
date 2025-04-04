@@ -1,7 +1,7 @@
 extends Control
 @onready var tableau_group: HBoxContainer = $CardTable/MarginContainer/Tableau_group
 @onready var stock_and_waste: HBoxContainer = $CardTable/HBoxContainer/HBoxContainer/StockAndWaste
-@onready var difficulty: Button = $UI/Top/Difficulty
+@onready var difficulty_button: Button = $UI/Top/Difficulty
 @onready var start: Button = $UI/Top/Start
 @onready var tips_button: Button = $UI/Top/Tips
 @onready var cancel: Button = $UI/Top/Cancel
@@ -9,6 +9,7 @@ extends Control
 @onready var cards_control: Control = $Cards
 @onready var audio_stream_player: AudioStreamPlayer = $UI/AudioStreamPlayer
 @onready var win: Label = $UI/Win
+@onready var game_rules_container: CenterContainer = $UI/GameRules
 
 const TIPS = preload("res://asserts/audio_effect/tips.wav")
 const UNDO = preload("res://asserts/audio_effect/undo.wav")
@@ -48,6 +49,10 @@ func set_fullscreen(enabled: bool):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 		# OS.set_window_fullscreen(false)
 
+func _set_tooltip():
+	#difficulty_button.hint_tooltip
+	pass
+
 func _win():
 	GameSettings.playing = false
 	win.show()
@@ -72,9 +77,9 @@ func _play_audio_win():
 func _on_difficulty_pressed() -> void:
 	var is_game_mode_easy = GameSettings.change_difficulty()
 	if is_game_mode_easy:
-		difficulty.text = "游戏难度:简单"
+		difficulty_button.text = "游戏难度:简单"
 	else:
-		difficulty.text = "游戏难度:困难"
+		difficulty_button.text = "游戏难度:困难"
 
 
 func _on_start_pressed() -> void:
@@ -173,3 +178,11 @@ func _on_tips_pressed() -> void:
 
 func _on_exits_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_game_rules_button_confirm_pressed() -> void:
+	game_rules_container.hide()
+
+
+func _on_game_rules_button_pressed() -> void:
+	game_rules_container.show()

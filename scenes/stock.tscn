@@ -15,6 +15,12 @@ custom_minimum_size = Vector2(88, 124)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+tooltip_text = "发牌堆和废牌堆
+发牌堆：
+未发的牌堆。玩家从这里逐张（简单难度）或逐三张（困难难度）翻牌到废牌堆。
+如果发牌堆为空，再次点击会尝试洗牌并重置废牌堆。
+废牌堆：
+从发牌堆翻出的牌暂时放置的区域。玩家只可以使用最上方的一张卡片。"
 texture_normal = ExtResource("2_p7rtt")
 
 [connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]

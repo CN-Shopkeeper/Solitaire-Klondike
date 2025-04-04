@@ -14,10 +14,13 @@ offset_right = -1152.0
 offset_bottom = -648.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_text = "目标牌堆：
+叠放游戏目标中将四种花色的牌按A→K的顺序完成的地方。"
 script = ExtResource("1_amf41")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 custom_minimum_size = Vector2(88, 124)
+layout_mode = 0
 mouse_filter = 1
 color = Color(0.596078, 0.984314, 0.596078, 0.380392)
 
@@ -26,6 +29,7 @@ custom_minimum_size = Vector2(88, 124)
 layout_mode = 0
 offset_right = 1.0
 offset_bottom = 23.0
+mouse_filter = 1
 theme_override_colors/font_color = Color(1, 0, 0, 0.392157)
 theme_override_font_sizes/font_size = 48
 text = "♦"

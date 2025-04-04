@@ -12,6 +12,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_text = "主牌区：
+桌面上7列牌堆，玩家在这里移动和整理牌。
+纸牌必须按点数递减，且红黑交替排列。"
 script = ExtResource("1_meqn6")
 
 [node name="ColorRect" type="ColorRect" parent="."]
