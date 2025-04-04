@@ -2,6 +2,7 @@ extends Node
 const CARD = preload("res://scenes/card.tscn")
 
 const TEMP_MOVE_GROUP_NAME = "move_group_tmp"
+const TIPS_GROUP_NAME = "tips_group"
 
 # 开始游戏时，先将所有card节点删除
 func delete_all_card_nodes(cards_control: Control = null):
@@ -144,6 +145,70 @@ func move_card_node_to_foundation(card_node: Control, suit: String):
 	# stack的修改要在node之后，因为stack有信号
 	# 从tableau移动到foundation的card一定是处于顶部
 	foundation_stack.push(source_stack.pop())
+
+func create_tips_cards_node_and_tween(cards: Array, from_pos: Vector2, to_pos: Vector2, offset: Vector2, cards_control: Control):
+	var card_nodes = []
+	for i in cards.size():
+		var card = cards[i]
+		var tips_card_node = create_card_node(card, cards_control)
+		# 为什么这里设置tips_card_node.shadow.hide无效
+		tips_card_node.position = from_pos + offset * i
+		tips_card_node.add_to_group(TIPS_GROUP_NAME)
+		card_nodes.append(tips_card_node)
+	# to_pos: Vector2, duration: float, from_pos: Vector2 = Vector2.ZERO, delay = 0.0
+	var tips_loop_cnt = 3
+	var looping = true
+	while tips_loop_cnt > 0:
+		for i in card_nodes.size():
+			var tips_card_node = card_nodes[i]
+			if tips_card_node:
+				tips_card_node.tween_position(to_pos + offset * i, GameSettings.TIPS_CARD_DURATION, from_pos + offset * i)
+			else:
+				looping = false
+				break
+		if not looping:
+			break
+		await get_tree().create_timer(GameSettings.TIPS_CARD_DURATION + 0.5).timeout
+		tips_loop_cnt -= 1
+	for tips_card_node in card_nodes:
+		if tips_card_node:
+			tips_card_node.queue_free()
+
+func create_tips_card_back_node_and_tween_scale(pos: Vector2, cards_control: Control):
+	var tips_card_node = create_card_node(ClassCard.new(Poker.HEARTS, "A"), cards_control)
+	tips_card_node.position = pos
+	tips_card_node.add_to_group(TIPS_GROUP_NAME)
+	var tween = create_tween()
+	var tips_loop_cnt = 3
+	var looping = true
+	while tips_loop_cnt > 0:
+		if tips_card_node:
+			tween.kill()
+			tween = create_tween()
+			tween.tween_property(tips_card_node, "scale", Vector2(1.1, 1.1), 0.3) \
+				.set_trans(Tween.TRANS_QUAD) \
+				.set_ease(Tween.EASE_OUT)
+
+		# 第二个动画：从1.1回到1
+			tween.tween_property(tips_card_node, "scale", Vector2(1.0, 1.0), 0.3) \
+				.set_trans(Tween.TRANS_QUAD) \
+				.set_ease(Tween.EASE_IN)
+		else:
+			looping = false
+			break
+		if not looping:
+			break
+		await get_tree().create_timer(0.6 + 0.5).timeout
+		tips_loop_cnt -= 1
+
+	if tips_card_node:
+			tips_card_node.queue_free()
+
+func remove_tips_card_node():
+	var tips_nodes = get_tree().get_nodes_in_group(TIPS_GROUP_NAME)
+	for node in tips_nodes:
+		if node:
+			node.queue_free()
 
 # 获取当前节点的card及其顺序下的card的nodes
 func find_ordering_card_nodes(root_card_node: Control) -> Array:

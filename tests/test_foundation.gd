@@ -5,11 +5,16 @@ extends Control
 @onready var difficulty: Button = $UI/Top/Difficulty
 @onready var cancel: Button = $UI/Top/Cancel
 @onready var tips: Button = $UI/Top/Tips
-
 @onready var cards_control: Control = $Cards
+@onready var foundation: Control = $HBoxContainer/VBoxContainer/Foundation
 
 func _ready() -> void:
 	pass
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed:  # 按下鼠标（松开时 event.pressed 为 false）
+			CardNodeManager.remove_tips_card_node()
 
 func _process(delta: float) -> void:
 	cancel.disabled = GameSettings.undo_stack.size() == 0 or not GameSettings.playing
@@ -56,3 +61,12 @@ func _on_start_pressed() -> void:
 
 func _on_cancel_pressed() -> void:
 	GameSettings.undo()
+
+
+func _on_tips_pressed() -> void:
+	var tips = GameRules.get_tips_foundation()
+	if tips:
+		print(tips)
+		if tips["to"] == Poker.HEARTS:
+			var from_pos = tips["card"].get_owning_node().global_position
+			CardNodeManager.create_tips_cards_node_and_tween([tips["card"]], from_pos, foundation.global_position, Vector2.ZERO, cards_control)

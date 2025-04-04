@@ -8,6 +8,7 @@ extends Control
 @onready var start: Button = $UI/Top/Start
 @onready var tips: Button = $UI/Top/Tips
 @onready var cancel: Button = $UI/Top/Cancel
+@onready var h_box_container: HBoxContainer = $HBoxContainer
 
 
 @onready var tableau_0: Control = $HBoxContainer/Tableau_0
@@ -15,6 +16,11 @@ extends Control
 
 func _ready() -> void:
 	pass
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed:  # 按下鼠标（松开时 event.pressed 为 false）
+			CardNodeManager.remove_tips_card_node()
 
 func _process(delta: float) -> void:
 	cancel.disabled = GameSettings.undo_stack.size() == 0 or not GameSettings.playing
@@ -70,3 +76,41 @@ func _on_difficulty_pressed() -> void:
 		difficulty.text = "游戏难度:简单"
 	else:
 		difficulty.text = "游戏难度:困难"
+
+
+func _on_tips_pressed() -> void:
+	var tips = GameRules.get_tips_tableau_to_flip()
+	if tips:
+		print(tips)
+		var from_tableau_index = tips["from_tableau_index"]
+		var to_tableau_index = tips["to_tableau_index"]
+		var from_y_offset = h_box_container.get_child(from_tableau_index).pile_offset_y
+		var to_y_offset = h_box_container.get_child(to_tableau_index).pile_offset_y
+		var from_pos = tips["cards"][0].get_owning_node().global_position
+		var to_pos = tips["to"].get_owning_node().global_position + Vector2(0, to_y_offset)
+
+		CardNodeManager.create_tips_cards_node_and_tween(tips["cards"], from_pos, to_pos, Vector2(0, from_y_offset), cards_control)
+		return
+	tips = GameRules.get_tips_tableau_bottom()
+	if tips:
+		print(tips)
+		var from_tableau_index = tips["from_tableau_index"]
+		var to_tableau_index = tips["to_tableau_index"]
+		var from_y_offset = h_box_container.get_child(from_tableau_index).pile_offset_y
+		var to_y_offset = h_box_container.get_child(to_tableau_index).pile_offset_y
+		var from_pos = tips["cards"][0].get_owning_node().global_position
+		var to_pos = h_box_container.get_child(to_tableau_index).global_position
+		CardNodeManager.create_tips_cards_node_and_tween(tips["cards"], from_pos, to_pos, Vector2(0, from_y_offset), cards_control)
+		return
+	tips = GameRules.get_tips_tableau()
+	if tips:
+		print(tips)
+		var from_tableau_index = tips["from_tableau_index"]
+		var to_tableau_index = tips["to_tableau_index"]
+		var from_y_offset = h_box_container.get_child(from_tableau_index).pile_offset_y
+		var to_y_offset = h_box_container.get_child(to_tableau_index).pile_offset_y
+		var from_pos = tips["cards"][0].get_owning_node().global_position
+		var to_pos = tips["to"].get_owning_node().global_position + Vector2(0, to_y_offset)
+
+		CardNodeManager.create_tips_cards_node_and_tween(tips["cards"], from_pos, to_pos, Vector2(0, from_y_offset), cards_control)
+		return

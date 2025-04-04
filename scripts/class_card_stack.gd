@@ -3,12 +3,12 @@ extends Resource
 
 signal item_changed
 
-var stack_name:String
+var stack_name: String
 var _stack: Array[ClassCard] = []  # 使用 Array 来模拟栈
 
-func _init(_stack_name="") -> void:
+func _init(_stack_name = "") -> void:
 	stack_name = _stack_name
-	
+
 
 # 推入元素（push）
 func push(value: ClassCard) -> void:
@@ -79,6 +79,16 @@ func find_first_and_get_sublist(card: ClassCard) -> Array:
 			return _stack.slice(i, _stack.size())  # 返回从i到末尾的子数组拷贝
 	return []  # 如果没有找到匹配项，返回空数组
 
+func find_order_sublist() -> Array:
+	var root_index = _stack.size()-1
+	for i in range(_stack.size()-1, -1, -1):
+		var card = _stack[i]
+		if card.is_in_order and not card.is_flipped:
+			root_index -= 1
+		else:
+			break
+	return _stack.slice(root_index + 1, _stack.size())
+
 # 检查栈是否为空
 func is_empty() -> bool:
 	return _stack.size() == 0
@@ -102,7 +112,7 @@ func _arrange_item() -> void:
 	var last_point_value = Poker.get_point_num_value(peek().point)
 	while index >= 0:
 		var card = _stack[index]
-		card.owning_stack=stack_name
+		card.owning_stack = stack_name
 		if card.get_owning_node():
 			card.get_owning_node().set_card(card)
 		if index == _stack.size()-1:

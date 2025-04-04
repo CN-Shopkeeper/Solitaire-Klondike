@@ -6,6 +6,134 @@ func _ready() -> void:
 	for suit in Poker.SUITS:
 		GameData.get_foundation_stack(suit).connect("item_changed", Callable(self, "check_winning"))
 
+# 直接送基础牌堆的操作
+func get_tips_foundation():
+	# 在tableau中的优先
+	for tableau_index in range(7):
+		var card = GameData.get_tableau_stack(tableau_index).peek()
+		if ! card:
+			continue
+		for suit in Poker.SUITS:
+			var is_legal = check_card_move_foundation_legal(card, suit)
+			if is_legal:
+				return {"card": card.get_copy(), "to": suit}
+	# 其次是在wasted的
+	var card = GameData.get_waste_stack().peek()
+	if card:
+		for suit in Poker.SUITS:
+			var is_legal = check_card_move_foundation_legal(card, suit)
+			if is_legal:
+				return {"card": card.get_copy(), "to": suit}
+	return null
+
+# 翻开桌面上的隐藏牌，或创造空列
+func get_tips_tableau_to_flip():
+	for tableau_index in range(7):
+		var from_tableau_cards = GameData.get_tableau_stack(tableau_index)
+		var cards = from_tableau_cards.find_order_sublist()
+		# cards.size()==from_tableau_cards.size()
+		# 创造空列，否则翻开
+		if 0 == cards.size():
+			continue
+		for ti in range(7):
+			if ti == tableau_index or GameData.get_tableau_stack(ti).is_empty():
+				continue
+			var matched_card = GameData.get_tableau_stack(ti).peek()
+			if check_card_move_tableau_card_legal(cards[0], matched_card):
+				var cards_copy = []
+				for card in cards:
+					cards_copy.append(card.get_copy())
+				return {"cards": cards_copy, "to": matched_card.get_copy(), "from_tableau_index": tableau_index, "to_tableau_index": ti}
+	return null
+
+# 利用空的tableau来翻开桌面上的隐藏牌
+func get_tips_tableau_bottom():
+	for tableau_index in range(7):
+		if not GameData.get_tableau_stack(tableau_index).is_empty():
+			continue
+		for ti in range(7):
+			var from_tableau_cards = GameData.get_tableau_stack(ti)
+			if ti == tableau_index or from_tableau_cards.is_empty():
+				continue
+			var cards = from_tableau_cards.find_order_sublist()
+			if cards[0].point != "K" or cards.size() == from_tableau_cards.size():
+				continue
+			var cards_copy = []
+			for card in cards:
+				cards_copy.append(card.get_copy())
+			return {"cards": cards_copy, "to": tableau_index, "from_tableau_index": ti, "to_tableau_index": tableau_index}
+	return null
+
+# waste顶端是否可以移动到tableau
+func get_tips_waste_to_tableau():
+	var card = GameData.get_waste_stack().peek()
+	if !card:
+		return null
+	for tableau_index in range(7):
+		var card_top = GameData.get_tableau_stack(tableau_index).peek()
+		if ! card_top:
+			continue
+		var is_legal = check_card_move_tableau_card_legal(card, card_top)
+		if is_legal:
+			return {"card": card.get_copy(), "to": card_top.get_copy(), "to_tableau_index": tableau_index}
+	return null
+
+# waste顶端是否可以移动到空tableau
+func get_tips_waste_to_tableau_bottom():
+	var card = GameData.get_waste_stack().peek()
+	if !card or "K" != card.point:
+		return null
+	for tableau_index in range(7):
+		if GameData.get_tableau_stack(tableau_index).is_empty():
+			return {"card": card.get_copy(), "to": tableau_index, "to_tableau_index": tableau_index}
+	return null
+
+# 如果有可以移动到foundation、tableau的牌，则从废牌堆(Waste) 或库存（Stock）移动。
+# 弃牌堆最上面一张已经在get_tips_foundation、get_tips_waste_to_tableau、get_tips_waste_to_tableau_bottom完成
+func get_tips_stock_deal():
+	var cards_to_check = []
+	for card in GameData.get_stock_stack().get_stack_array():
+		cards_to_check.append(card.get_copy())
+	for card in GameData.get_waste_stack().get_stack_array():
+		cards_to_check.append(card.get_copy())
+	for suit in Poker.SUITS:
+		for card in cards_to_check:
+			var is_legal = check_card_move_foundation_legal(card, suit)
+			if is_legal:
+					return true
+	for tableau_index in range(7):
+		var card_top = GameData.get_tableau_stack(tableau_index).peek()
+		if ! card_top:
+			# 判断有没有k
+			for card in cards_to_check:
+				if card.point == "K":
+					return true
+		else:
+			# 判断能不能移到牌下面
+			for card in cards_to_check:
+				var is_legal = check_card_move_tableau_card_legal(card, card_top)
+				if is_legal:
+					return true
+	return false
+
+# 移动多张牌
+func get_tips_tableau():
+	for tableau_index in range(7):
+		var from_tableau_cards = GameData.get_tableau_stack(tableau_index)
+		var cards = from_tableau_cards.find_order_sublist()
+		if 0 == cards.size():
+			continue
+		for ti in range(7):
+			if ti == tableau_index or GameData.get_tableau_stack(ti).is_empty():
+				continue
+			var matched_card = GameData.get_tableau_stack(ti).peek()
+			if check_card_move_tableau_card_legal(cards[0], matched_card):
+				var cards_copy = []
+				for card in cards:
+					cards_copy.append(card.get_copy())
+				return {"cards": cards_copy, "to": matched_card.get_copy(), "from_tableau_index": tableau_index, "to_tableau_index": ti}
+	return null
+
 func check_winning():
 	var completed_cnt = 0
 	for suit in Poker.SUITS:

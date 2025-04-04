@@ -42,4 +42,7 @@ func _on_stock_stock_pressed() -> void:
 	else:
 		# 否则从牌库取出一张牌到废牌堆
 		GameSettings.save_state()
-		CardNodeManager.move_card_from_stock_to_waste()
+		var to_draw_number = GameSettings.stock_draw_number
+		while to_draw_number > 0:
+			CardNodeManager.move_card_from_stock_to_waste()
+			to_draw_number -= 1

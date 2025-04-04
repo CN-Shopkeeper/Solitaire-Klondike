@@ -17,6 +17,11 @@ func _process(delta: float) -> void:
 	cancel.disabled = GameSettings.undo_stack.size() == 0 or not GameSettings.playing
 	tips.disabled = not GameSettings.playing
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed:  # 按下鼠标（松开时 event.pressed 为 false）
+			CardNodeManager.remove_tips_card_node()
+
 func _on_difficulty_pressed() -> void:
 	var is_game_mode_easy = GameSettings.change_difficulty()
 	if is_game_mode_easy:
@@ -46,3 +51,6 @@ func _on_start_pressed() -> void:
 func _on_cancel_pressed() -> void:
 	GameSettings.undo()
 
+
+func _on_tips_pressed() -> void:
+	CardNodeManager.create_tips_card_back_node_and_tween_scale(stock_and_waste.global_position, cards_control)

@@ -178,4 +178,5 @@ offset_bottom = 40.0
 
 [connection signal="pressed" from="UI/Top/Difficulty" to="." method="_on_difficulty_pressed"]
 [connection signal="pressed" from="UI/Top/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="UI/Top/Tips" to="." method="_on_tips_pressed"]
 [connection signal="pressed" from="UI/Top/Cancel" to="." method="_on_cancel_pressed"]

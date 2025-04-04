@@ -6,6 +6,7 @@ const CARD_BACK_BLUE = preload("res://asserts/cards/card_back_blue.png")
 const CARD_BACK_RED = preload("res://asserts/cards/card_back_red.png")
 const CARD = preload("res://scenes/card.tscn")
 
+const TIPS_CARD_DURATION = 1
 const STOCK_TO_WASTE_DURATION = 0.1
 const WASTE_TO_STOCK_DURATION = 0.05
 const WASTE_TO_STOCK_DELAY = 0.02
@@ -16,6 +17,10 @@ var playing := false
 var _is_game_mode_easy := true
 
 var undo_stack = []
+
+var stock_draw_number: int:
+	get:
+		return 1 if _is_game_mode_easy else 3
 
 var max_undo: int:
 	get:
