@@ -13,7 +13,7 @@ config_version=5
 config/name="solitaire-klondike"
 run/main_scene="uid://c2m3xgi4ngyao"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://d3f0gufple4lo"
 
 [autoload]
 

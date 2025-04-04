@@ -3,7 +3,7 @@ extends Control
 @onready var stock_and_waste: HBoxContainer = $CardTable/HBoxContainer/HBoxContainer/StockAndWaste
 @onready var difficulty: Button = $UI/Top/Difficulty
 @onready var start: Button = $UI/Top/Start
-@onready var tips: Button = $UI/Top/Tips
+@onready var tips_button: Button = $UI/Top/Tips
 @onready var cancel: Button = $UI/Top/Cancel
 @onready var foundation: HBoxContainer = $CardTable/HBoxContainer/HBoxContainer/Foundation
 @onready var cards_control: Control = $Cards
@@ -26,12 +26,12 @@ func _ready() -> void:
 	## 应用到CanvasLayer或根节点
 	#scale = Vector2(1 / scale_factor, 1 / scale_factor)
 	GameRules.connect("win", Callable(self, "_win"))
-	tips.disabled = true
+	tips_button.disabled = true
 	cancel.disabled = true
 
 func _process(_delta: float) -> void:
 	cancel.disabled = GameSettings.undo_stack.size() == 0 or not GameSettings.playing
-	tips.disabled = not GameSettings.playing or ( not GameSettings.is_tips_cnt_left())
+	tips_button.disabled = not GameSettings.playing or ( not GameSettings.is_tips_cnt_left())
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -128,7 +128,6 @@ func _on_tips_pressed() -> void:
 		var from_tableau_index = tips["from_tableau_index"]
 		var to_tableau_index = tips["to_tableau_index"]
 		var from_y_offset = tableau_group.get_child(from_tableau_index).pile_offset_y
-		var to_y_offset = tableau_group.get_child(to_tableau_index).pile_offset_y
 		var from_pos = tips["cards"][0].get_owning_node().global_position
 		var to_pos = tableau_group.get_child(to_tableau_index).global_position
 		CardNodeManager.create_tips_cards_node_and_tween(tips["cards"], from_pos, to_pos, Vector2(0, from_y_offset), cards_control)
@@ -148,7 +147,6 @@ func _on_tips_pressed() -> void:
 	tips = GameRules.get_tips_waste_to_tableau_bottom()
 	if tips:
 		var to_tableau_index = tips["to_tableau_index"]
-		var to_y_offset = tableau_group.get_child(to_tableau_index).pile_offset_y
 		var from_pos = tips["card"].get_owning_node().global_position
 		var to_pos = tableau_group.get_child(to_tableau_index).global_position
 		CardNodeManager.create_tips_cards_node_and_tween([tips["card"]], from_pos, to_pos, Vector2(0, 0), cards_control)

@@ -10,13 +10,13 @@ func _ready() -> void:
 func get_tips_foundation():
 	# 在tableau中的优先
 	for tableau_index in range(7):
-		var card = GameData.get_tableau_stack(tableau_index).peek()
-		if ! card:
+		var card_tableau_peek = GameData.get_tableau_stack(tableau_index).peek()
+		if ! card_tableau_peek:
 			continue
 		for suit in Poker.SUITS:
-			var is_legal = check_card_move_foundation_legal(card, suit)
+			var is_legal = check_card_move_foundation_legal(card_tableau_peek, suit)
 			if is_legal:
-				return {"card": card.get_copy(), "to": suit}
+				return {"card": card_tableau_peek.get_copy(), "to": suit}
 	# 其次是在wasted的
 	var card = GameData.get_waste_stack().peek()
 	if card:
