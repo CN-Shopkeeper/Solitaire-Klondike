@@ -13,24 +13,16 @@ func delete_all_card_nodes(cards_control: Control = null):
 		card_node.queue_free()
 
 
-# 创建card节点并添加到组
-func create_card_node(card: ClassCard, cards_control: Control):
+# 创建card节点
+func create_card_node(card: ClassCard, init_position: Vector2, cards_control: Control):
 	if !cards_control:
 		# 如果缺省，则默认从主场景中加载
 		cards_control = get_tree().root.get_node("Main/Cards")
 	var node = CARD.instantiate()
 	cards_control.add_child(node)
+	node.position = init_position
 	node.set_card(card)
 	return node
-
-func create_stock_card_node(card: ClassCard, cards_control: Control = null):
-	return create_card_node(card, cards_control)
-
-func create_waste_card_node(card: ClassCard, cards_control: Control = null):
-	return create_card_node(card, cards_control)
-
-func create_tableau_card_node(card: ClassCard, group_index: int, cards_control: Control = null):
-	return create_card_node(card, cards_control)
 
 func get_stock_card_nodes():
 	var nodes = []
@@ -152,9 +144,8 @@ func create_tips_cards_node_and_tween(cards: Array, from_pos: Vector2, to_pos: V
 	var card_nodes = []
 	for i in cards.size():
 		var card = cards[i]
-		var tips_card_node = create_card_node(card, cards_control)
+		var tips_card_node = create_card_node(card, from_pos + offset * i, cards_control)
 		# 为什么这里设置tips_card_node.shadow.hide无效
-		tips_card_node.position = from_pos + offset * i
 		tips_card_node.add_to_group(TIPS_GROUP_NAME)
 		card_nodes.append(tips_card_node)
 	# to_pos: Vector2, duration: float, from_pos: Vector2 = Vector2.ZERO, delay = 0.0
@@ -177,8 +168,7 @@ func create_tips_cards_node_and_tween(cards: Array, from_pos: Vector2, to_pos: V
 			tips_card_node.queue_free()
 
 func create_tips_card_back_node_and_tween_scale(pos: Vector2, cards_control: Control):
-	var tips_card_node = create_card_node(ClassCard.new(Poker.HEARTS, "A"), cards_control)
-	tips_card_node.position = pos
+	var tips_card_node = create_card_node(ClassCard.new(Poker.HEARTS, "A"), pos, cards_control)
 	tips_card_node.add_to_group(TIPS_GROUP_NAME)
 	var tween = create_tween()
 	var tips_loop_cnt = 3

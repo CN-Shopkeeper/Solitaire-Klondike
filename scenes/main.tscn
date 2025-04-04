@@ -196,6 +196,12 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
 text = "撤销"
 
+[node name="Exits" type="Button" parent="UI/Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "退出游戏"
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="UI"]
 
 [node name="Cards" type="Control" parent="."]
@@ -207,3 +213,4 @@ offset_bottom = 40.0
 [connection signal="pressed" from="UI/Top/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="UI/Top/Tips" to="." method="_on_tips_pressed"]
 [connection signal="pressed" from="UI/Top/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="UI/Top/Exits" to="." method="_on_exits_pressed"]

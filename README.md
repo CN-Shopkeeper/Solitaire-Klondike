@@ -34,4 +34,6 @@ Solitaire Klondike game made in godot engine
 
 - Audio Effect "game_success": [success 1](https://pixabay.com/sound-effects/success-1-6297/)
 
+- Audio Effect "game_start": [Game Start](https://pixabay.com/sound-effects/game-start-6104/)
+
 - Audio Effect(ohters): [BFSX](https://www.bfxr.net/)

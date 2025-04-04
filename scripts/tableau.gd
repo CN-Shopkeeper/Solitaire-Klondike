@@ -25,7 +25,7 @@ func reset(new_cards: ClassCardStack) -> void:
 	new_cards = new_cards.get_copy()
 	for card in new_cards.get_stack_array():
 		# 生成最新的卡牌
-		CardNodeManager.create_tableau_card_node(card, group_index, cards_control)
+		CardNodeManager.create_card_node(card, GameSettings.card_node_init_pos, cards_control)
 
 	cards.assign(new_cards)
 	cards.peek().is_flipped = false

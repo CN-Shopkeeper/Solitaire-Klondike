@@ -11,17 +11,18 @@ var waste_cards = GameData.get_waste_stack()
 
 func _ready() -> void:
 	waste.cards_control = cards_control
-	pass
+	call_deferred("_set_card_node_init_position")
 
 func reset_stock(new_stock_cards: ClassCardStack):
 	new_stock_cards = new_stock_cards.get_copy()
 	for card in new_stock_cards.get_stack_array():
 		# 生成最新的卡牌
-		CardNodeManager.create_stock_card_node(card, cards_control)
+		CardNodeManager.create_card_node(card, GameSettings.card_node_init_pos, cards_control)
 
 	stock_cards.assign(new_stock_cards)
 
-
+func _set_card_node_init_position():
+	GameSettings.card_node_init_pos = global_position
 
 func _on_stock_stock_pressed() -> void:
 	if stock_cards.is_empty():

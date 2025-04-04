@@ -13,8 +13,18 @@ extends Control
 const TIPS = preload("res://asserts/audio_effect/tips.wav")
 const UNDO = preload("res://asserts/audio_effect/undo.wav")
 const GAME_SUCCESS = preload("res://asserts/audio_effect/game_success.mp3")
+const GAME_START = preload("res://asserts/audio_effect/game_start.mp3")
 
 func _ready() -> void:
+	#print(DisplayServer.screen_get_size())
+	#DisplayServer.window_set_size(Vector2(1920, 1080))
+	set_fullscreen(true)
+	# 获取当前窗口大小
+	#var window_size = DisplayServer.window_get_size()
+		## 计算与你设计分辨率的比例
+	#var scale_factor = min(window_size.x / 1920.0, window_size.y / 1080.0)
+	## 应用到CanvasLayer或根节点
+	#scale = Vector2(1 / scale_factor, 1 / scale_factor)
 	GameRules.connect("win", Callable(self, "_win"))
 	tips.disabled = true
 	cancel.disabled = true
@@ -28,6 +38,16 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:  # 按下鼠标（松开时 event.pressed 为 false）
 			CardNodeManager.remove_tips_card_node()
 
+func set_fullscreen(enabled: bool):
+	if enabled:
+		# 设置为全屏无边框窗口
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		# 或者使用以下方式设置全屏
+		# OS.set_window_fullscreen(true)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		# OS.set_window_fullscreen(false)
+
 func _win():
 	GameSettings.playing = false
 	win.show()
@@ -39,6 +59,10 @@ func _play_audio_undo():
 
 func _play_audio_tips():
 	audio_stream_player.stream = TIPS
+	audio_stream_player.play()
+
+func _play_audio_game_start():
+	audio_stream_player.stream = GAME_START
 	audio_stream_player.play()
 
 func _play_audio_win():
@@ -56,6 +80,7 @@ func _on_difficulty_pressed() -> void:
 func _on_start_pressed() -> void:
 	win.hide()
 	GameSettings.clear()
+	_play_audio_game_start()
 
 	var dealt_cards = GameRules.deal()
 	for i in range(7):
@@ -146,3 +171,7 @@ func _on_tips_pressed() -> void:
 
 		CardNodeManager.create_tips_cards_node_and_tween(tips["cards"], from_pos, to_pos, Vector2(0, from_y_offset), cards_control)
 		return
+
+
+func _on_exits_pressed() -> void:
+	get_tree().quit()

@@ -13,6 +13,7 @@ const WASTE_TO_STOCK_DELAY = 0.02
 
 const WAST_PILE_OFFSET_X = 20.0
 
+var card_node_init_pos: Vector2
 var playing := false
 var _is_game_mode_easy := true
 var _tips_cnt_left := 5

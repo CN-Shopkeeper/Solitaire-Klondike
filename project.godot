@@ -22,3 +22,7 @@ GameSettings="*res://scripts/autoload_game_settings.gd"
 GameData="*res://scripts/autoload_game_data.gd"
 GameRules="*res://scripts/autoload_game_rules.gd"
 CardNodeManager="*res://scripts/autoload_card_node_manager.gd"
+
+[display]
+
+window/stretch/mode="viewport"
