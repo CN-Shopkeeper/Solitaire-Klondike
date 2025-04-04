@@ -2,7 +2,7 @@
 
 [ext_resource type="Shader" uid="uid://cfgg82udgfufi" path="res://shaders/fake_3d.gdshader" id="1_6u4wf"]
 [ext_resource type="Script" uid="uid://6qu3vkd4lc4t" path="res://scripts/card.gd" id="1_ktuci"]
-[ext_resource type="Texture2D" uid="uid://bhxbvy5ng5ixg" path="res://asserts/cards/hearts_A.png" id="2_ktuci"]
+[ext_resource type="Texture2D" path="res://asserts/cards/hearts_A.png" id="2_ktuci"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d54s8"]
 resource_local_to_scene = true

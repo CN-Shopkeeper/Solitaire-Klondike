@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://cbna67o8yxxrl" path="res://scenes/stock_and_waste.tscn" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://blxdvbdlwsux" path="res://scenes/foundation.tscn" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://h3r2odapwqpq" path="res://scenes/tableau.tscn" id="3_sugp2"]
-[ext_resource type="Texture2D" uid="uid://54k05ynvvgaf" path="res://asserts/game_rules.jpg" id="6_tefeu"]
+[ext_resource type="Texture2D" path="res://asserts/game_rules.jpg" id="6_tefeu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tbgi4"]
 shader = ExtResource("1_jyhfs")

@@ -5,17 +5,17 @@ extends Control
 @onready var card_texture: TextureRect = $CardTexture
 @onready var shadow: TextureRect = $Shadow
 @onready var area: Area2D = $Area
-@export var card_face: Texture2D = preload("res://asserts/cards/hearts_A.png")
+@export var card_face: Texture2D = preload("res://assets/cards/hearts_A.png")
 @export var angle_x_max: float = 15.0
 @export var angle_y_max: float = 15.0
 @export var max_offset_shadow: float = 20.0
 @export var rot_sensitivity: float = 4
 
-const PICK_UP = preload("res://asserts/audio_effect/pick_up.wav")
-const PUT_DOWN_RIGHT = preload("res://asserts/audio_effect/put_down_right.wav")
-const PUT_DOWN_WRONG = preload("res://asserts/audio_effect/put_down_wrong.wav")
-const DEAL = preload("res://asserts/audio_effect/deal.wav")
-const SHUFFLE = preload("res://asserts/audio_effect/shuffle.wav")
+const PICK_UP = preload("res://assets/audio_effect/pick_up.wav")
+const PUT_DOWN_RIGHT = preload("res://assets/audio_effect/put_down_right.wav")
+const PUT_DOWN_WRONG = preload("res://assets/audio_effect/put_down_wrong.wav")
+const DEAL = preload("res://assets/audio_effect/deal.wav")
+const SHUFFLE = preload("res://assets/audio_effect/shuffle.wav")
 
 
 var card: ClassCard = ClassCard.new("hearts", "A")

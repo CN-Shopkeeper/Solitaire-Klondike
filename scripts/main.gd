@@ -11,13 +11,12 @@ extends Control
 @onready var win: Label = $UI/Win
 @onready var game_rules_container: CenterContainer = $UI/GameRules
 
-const TIPS = preload("res://asserts/audio_effect/tips.wav")
-const UNDO = preload("res://asserts/audio_effect/undo.wav")
-const GAME_SUCCESS = preload("res://asserts/audio_effect/game_success.mp3")
-const GAME_START = preload("res://asserts/audio_effect/game_start.mp3")
+const TIPS = preload("res://assets/audio_effect/tips.wav")
+const UNDO = preload("res://assets/audio_effect/undo.wav")
+const GAME_SUCCESS = preload("res://assets/audio_effect/game_success.mp3")
+const GAME_START = preload("res://assets/audio_effect/game_start.mp3")
 
 func _ready() -> void:
-	#print(DisplayServer.screen_get_size())
 	#DisplayServer.window_set_size(Vector2(1920, 1080))
 	set_fullscreen(true)
 	# 获取当前窗口大小
@@ -107,7 +106,6 @@ func _on_tips_pressed() -> void:
 	_play_audio_tips()
 	var tips = GameRules.get_tips_foundation()
 	if tips:
-		print(tips)
 		var suit_index = Poker.SUITS.find(tips["to"])
 		var to_pos = foundation.get_child(suit_index).global_position
 		var from_pos = tips["card"].get_owning_node().global_position
@@ -116,7 +114,6 @@ func _on_tips_pressed() -> void:
 
 	tips = GameRules.get_tips_tableau_to_flip()
 	if tips:
-		print(tips)
 		var from_tableau_index = tips["from_tableau_index"]
 		var to_tableau_index = tips["to_tableau_index"]
 		var from_y_offset = tableau_group.get_child(from_tableau_index).pile_offset_y
@@ -129,7 +126,6 @@ func _on_tips_pressed() -> void:
 
 	tips = GameRules.get_tips_tableau_bottom()
 	if tips:
-		print(tips)
 		var from_tableau_index = tips["from_tableau_index"]
 		var to_tableau_index = tips["to_tableau_index"]
 		var from_y_offset = tableau_group.get_child(from_tableau_index).pile_offset_y
@@ -140,7 +136,6 @@ func _on_tips_pressed() -> void:
 
 	tips = GameRules.get_tips_waste_to_tableau()
 	if tips:
-		print(tips)
 		var to_tableau_index = tips["to_tableau_index"]
 		var to_y_offset = tableau_group.get_child(to_tableau_index).pile_offset_y
 		var from_pos = tips["card"].get_owning_node().global_position
@@ -164,7 +159,6 @@ func _on_tips_pressed() -> void:
 
 	tips = GameRules.get_tips_tableau()
 	if tips:
-		print(tips)
 		var from_tableau_index = tips["from_tableau_index"]
 		var to_tableau_index = tips["to_tableau_index"]
 		var from_y_offset = tableau_group.get_child(from_tableau_index).pile_offset_y

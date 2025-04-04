@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://p2nlpgbmqmn5"]
 
 [ext_resource type="Script" uid="uid://b3pn1h6egekwl" path="res://scripts/stock.gd" id="1_y5bj3"]
-[ext_resource type="Texture2D" uid="uid://cbtvx77xne8n5" path="res://asserts/cards/card_back_red.png" id="2_p7rtt"]
+[ext_resource type="Texture2D" path="res://asserts/cards/card_back_red.png" id="2_p7rtt"]
 
 [node name="Stock" type="Control"]
 custom_minimum_size = Vector2(88, 124)
